@@ -17,6 +17,10 @@
   "author": "Ignacio Monllor",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-stage-3": "6.24.1",
+    "babel-register": "6.26.0",
     "bcryptjs": "2.4.3",
     "body-parser": "1.18.2",
     "cors": "2.8.5",
@@ -35,10 +39,6 @@
   },
   "devDependencies": {
     "@types/lodash": "4.14.109",
-    "babel-cli": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-stage-3": "6.24.1",
-    "babel-register": "6.26.0",
     "eslint": "5.9.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.14.0",

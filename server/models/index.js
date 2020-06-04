@@ -15,7 +15,7 @@ let sequelize;
 // }
 
 sequelize = new Sequelize({
-  dialect: 'postgres',
+  dialect: config.dialect,
   username: config.username,
   port: config.port,
   password: config.password,
