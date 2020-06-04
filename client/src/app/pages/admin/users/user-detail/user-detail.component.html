@@ -1,0 +1,65 @@
+<mat-toolbar color="primary">
+  <span>{{form.controls['id'].value?"Modificar Usuario":"Nuevo Usuario"}}</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1">
+    <mat-icon>clear</mat-icon>
+  </button>
+</mat-toolbar>
+<form [formGroup]="form" class="normal-form">
+  <div class="row my-6">
+    <div class="col-12 col-sm-12 col-md-6">
+      <input type="hidden" formControlName="id">
+      <mat-form-field>
+        <input formControlName="fullname" matInput placeholder="Nombre/s" required autocomplete="off">
+        <mat-error>El nombre es requerido..</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6">
+      <mat-form-field>
+        <input formControlName="lastname" matInput placeholder="Apellido" required autocomplete="off">
+        <mat-error>El apellido es requerido..</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row my-6">
+    <div class="col-12 col-sm-12 col-md-6">
+      <mat-form-field>
+        <input formControlName="password" matInput placeholder="Contraseña" type="password" required autocomplete="off">
+        <mat-error>La contraseña es requerida..</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6">
+      <mat-form-field>
+        <input formControlName="confirmPassword" matInput placeholder="Confirmar contraseña" type="password" required autocomplete="off">
+        <mat-error>Debe repetir la contraseña..</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-6">
+      <mat-form-field>
+        <input formControlName="email" matInput placeholder="Email" require autocomplete="off" d>
+        <mat-error>El email es requerido..</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6">
+      <app-role-search [comboCtrl]="form.get('roles')"></app-role-search>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-6">
+      <mat-slide-toggle formControlName="active" ngchecked="[active]">Habilitado</mat-slide-toggle>
+    </div>
+  </div>
+  <div class="row m-t-10">
+    <div class="col-12">
+      <div class="button-row text-right">
+        <button mat-raised-button color="primary" (click)="onSubmit()" type="submit" [disabled]="form.invalid">
+            <mat-icon>save</mat-icon>
+            Guardar
+          </button>
+        <button mat-button color="warn" (click)="onClear()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>

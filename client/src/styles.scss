@@ -1,0 +1,356 @@
+@import "assets/css/pages/user-card.css";
+@import "~font-awesome-5-css/css/fontawesome-all.min.css";
+#themecolors a {
+  cursor: pointer;
+}
+
+.cdk-overlay-container {
+  z-index: 1127;
+}
+
+.pointer {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.w70 {
+  width: 70px;
+}
+
+.w150 {
+  width: 150px;
+}
+
+.img-50 {
+  width: 50px;
+}
+
+.bgModalblack {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+// .input-group-append,
+// .input-group-prepend {
+//     width: 100%;
+// }
+// mat-form-field {
+//     width: 100%;
+// }
+// thead {
+//     background: #242a33;
+//     color: white;
+//     text-transform: uppercase;
+// }
+div.container {
+  margin: 0px 40px;
+}
+
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+form.normal-form {
+  margin: 10px;
+}
+
+.controles-container {
+  width: 100%;
+  padding: 5%;
+}
+
+.controles-container>* {
+  width: 100%;
+}
+
+.add-bottom-padding {
+  padding-bottom: 10px;
+}
+
+
+/* radio group */
+
+mat-radio-group mat-radio-button {
+  margin-left: 5px;
+}
+
+.button-row button {
+  margin: 5px;
+}
+
+
+/* notification */
+
+snack-bar-container.success {
+  background-color: #5cb85c;
+  color: #fff;
+}
+
+snack-bar-container.warn {
+  background-color: #f99157;
+  color: #fff;
+}
+
+snack-bar-container.error {
+  background-color: red;
+  color: #fff;
+}
+
+snack-bar-container.notification simple-snack-bar {
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+.hide {
+  display: none;
+}
+
+
+/* mat-table */
+
+mat-footer-row mat-footer-cell {
+  justify-content: center;
+  font-style: italic;
+}
+
+
+/* filter controls */
+
+.search-div {
+  margin: 10px;
+}
+
+.search-form-field {
+  width: 26em;
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.search-form-field div.mat-form-field-underline {
+  display: none;
+}
+
+.search-form-field div.mat-form-field-infix {
+  border-top: 0px;
+}
+
+.search-form-field div.mat-form-field-wrapper {
+  padding-bottom: 0px;
+}
+
+.search-form-field div.mat-form-field-suffix button {
+  height: 32px;
+  width: 32px;
+}
+
+
+/* for dialog pop-up */
+
+.btn-dialog-close {
+  width: 45px;
+  min-width: 0px !important;
+  height: 40px;
+  padding: 0px !important;
+}
+
+.actions {
+  text-align: right;
+}
+
+button:focus,
+button:active:focus,
+button.active:focus,
+button.focus,
+button:active.focus,
+button.active.focus {
+  outline: none;
+}
+
+.done {
+  position: fixed;
+  top: 45%;
+  right: 4%;
+  color: white;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 36px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-container {
+  // height: 360px;
+  // width: 390px;
+  margin: 0 35%;
+  position: fixed
+}
+
+.box {
+  position: relative;
+  border-radius: 3px;
+  background: #ffffff;
+  border-top: 3px solid #d2d6de;
+  margin-bottom: 20px;
+  width: 100%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  &.box-primary {
+    border-top-color: #3c8dbc!important;
+  }
+  &.box.box-info {
+    border-top-color: #00c0ef;
+  }
+  &.box.box-success {
+    border-top-color: #00a65a;
+  }
+  &.box.box-default {
+    border-top-color: #d2d6de;
+  }
+  &.box.box-danger {
+    border-top-color: #dd4b39;
+  }
+}
+
+mat-row {
+  font-family: monospace;
+}
+
+.mat-row:hover {
+  background-color: #273db5;
+  .mat-cell {
+    color: whitesmoke;
+  }
+}
+
+.mat-header-cell {
+  background-color: #488CC9;
+  font-family: monospace;
+  color: white;
+  font-weight: 900;
+  text-transform: uppercase;
+  button.mat-sort-header-button {
+    text-transform: uppercase;
+  }
+}
+
+.mat-sort-header-arrow {
+  color: whitesmoke;
+}
+
+div.container {
+  margin: 0px 40px;
+}
+
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+form.normal-form {
+  margin: 10px;
+}
+
+.controles-container {
+  width: 100%;
+  padding: 2%;
+}
+
+.controles-container>* {
+  width: 100%;
+}
+
+.add-bottom-padding {
+  padding-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1 {
+  font-family: 'Roboto', cursive;
+  font-size: 40px;
+}
+
+h6 {
+  font-family: 'Roboto', cursive;
+  font-size: 21px;
+}
+
+h3 {
+  font-family: 'Roboto', cursive;
+  font-size: 19px;
+}
+
+.mat-success {
+  background-color: #3DA745;
+  color: #fff;
+}
+
+.mat-info {
+  background-color: #3FA2B8;
+  color: #fff;
+}
+
+.mat-dark {
+  background-color: #343A40;
+  color: #fff;
+}
+
+.mat-warning {
+  background-color: #F7C10B;
+  color: #fff;
+}
+
+.mat-gray {
+  background-color: #6B747C;
+  color: #fff;
+}
+
+/* Drop Zone */
+.drop-zone {
+	border: dotted 3px lightgray;
+	opacity: 0.5;
+	color: #666;
+	text-align: center
+}
+
+.file-over {
+	border: dotted 3px dodgerblue;
+}
+
+
+.text-green {
+	color: green
+}
+.icon-2x {
+  transform: scale(2);
+}
+
+.icon-3x {
+  transform: scale(3);
+}
+mat-form-field {
+  width: 100%;
+}
