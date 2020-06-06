@@ -6,26 +6,22 @@ import { fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import Swal from 'sweetalert2';
-import { PatientDetailComponent } from '../patient-detail/patient-detail.component';
+import { TurnDetailComponent } from '../turn-detail/turn-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
-import { PatientService } from '../patient.service';
+import { TurnService } from '../turn.service';
 import { TableDataSource } from '../../../shared/datasource.component';
-import { Patient } from '../patient.model';
+import { Turn } from '../turn.model';
 
 
 @Component({
-  selector: 'app-patient-list',
-  templateUrl: './patient-list.component.html',
-  styleUrls: ['./patient-list.component.scss']
+  selector: 'app-turn-list',
+  templateUrl: './turn-list.component.html',
+  styleUrls: ['./turn-list.component.scss']
 })
-export class PatientListComponent implements OnInit, AfterViewInit {
-  dataSource: TableDataSource<Patient>;
+export class TurnListComponent implements OnInit, AfterViewInit {
+  dataSource: TableDataSource<Turn>;
   displayedColumns: string[] = [
-    'img',
-    'fullname',
-    'lastname',
-    'email',
     'active',
     'actions',
   ];
@@ -38,17 +34,17 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     public notificationService: NotificationService,
-    public _patientService: PatientService,
+    public _turnService: TurnService,
   ) {
-    // _patientService.url = '/api/patient';
-    // this.dataSource = this.route.snapshot.data['patients'];
-    this.route.data.subscribe((data: {patients: TableDataSource<Patient>}) => {
-      this.dataSource = data.patients;
+    // _turnService.url = '/api/turn';
+    // this.dataSource = this.route.snapshot.data['turns'];
+    this.route.data.subscribe((data: {turns: TableDataSource<Turn>}) => {
+      this.dataSource = data.turns;
     });
   }
 
   ngOnInit() {
-    // this.dataSource = this.route.snapshot.data['patients'];
+    // this.dataSource = this.route.snapshot.data['turns'];
 
     this.filter = '';
     // this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
@@ -56,7 +52,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   }
   onCreate() {
     const dialogRef = this.dialog.open(
-      PatientDetailComponent,
+      TurnDetailComponent,
       this.dialogConfig(),
     );
     dialogRef.afterClosed().subscribe((result) => {
@@ -66,13 +62,13 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     });
   }
   onEdit(row) {
-    const dialogRef = this.dialog.open(
-      PatientDetailComponent,
-      this.dialogConfig(row),
-    );
-    dialogRef.afterClosed().subscribe(() => {
-      this.loadPage();
-    });
+    // const dialogRef = this.dialog.open(
+    //   TurnDetailComponent,
+    //   this.dialogConfig(row),
+    // );
+    // dialogRef.afterClosed().subscribe(() => {
+    //   this.loadPage();
+    // });
   }
   onDelete(id) {
     Swal.fire({
@@ -84,7 +80,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        // this._patientService.delete<Patient>(id).subscribe(
+        // this._turnService.delete<Turn>(id).subscribe(
         //   () => {
         //     this.notificationService.success(
         //       'El paciente seleccionado ha sido Eliminado',
@@ -143,7 +139,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   loadPage() {
     this.router.navigated = false;
     // tslint:disable-next-line: max-line-length
-    this.router.navigate(['/patients'],
+    this.router.navigate(['/turns'],
       { queryParams:
         {
           filter: this.input.nativeElement.value,
@@ -151,7 +147,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
           pageSize: this.paginator.pageSize
         }
       }).then(() => {
-        // console.log(this.route.snapshot.data.patients);
+        // console.log(this.route.snapshot.data.turns);
       });
   }
 

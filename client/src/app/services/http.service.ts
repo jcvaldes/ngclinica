@@ -50,7 +50,7 @@ export class HttpService {
     };
     if (roles) {
       options.params.updates.push(
-        {param: 'roles', value: roles, op: 's'})
+        {param: 'roles', value: roles.join(','), op: 's'});
     }
     return this.httpClient
       .get<T>(this.url, options)

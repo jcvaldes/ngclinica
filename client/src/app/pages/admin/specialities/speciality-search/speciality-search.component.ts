@@ -18,9 +18,10 @@ export class SpecialitySearchComponent extends ComboSearchComponent<Speciality> 
     super(_specialityService, false);
   }
   onSelectionChange(evt) {
+    debugger
     const selected = _.filter(this.payload, (el) => {
       return el.id === evt.value[0];
     });
-    this.selected = selected[0].specialityname;
+    this.selected = selected[0].name;
   }
 }

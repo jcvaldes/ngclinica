@@ -40,39 +40,6 @@
             matSortDirection="asc"
             matSortDisableClear
           >
-            <ng-container matColumnDef="img">
-              <mat-header-cell *matHeaderCellDef>Foto</mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                <img
-                  [src]="element.img | image: 'patients'"
-                  alt="foto"
-                  [ngStyle]="{ width: '80px' }"
-                  class="img-responsive img-100 pointer"
-                />
-              </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="fullname">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>
-                Nombre
-              </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                {{ element.fullname }}
-              </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="lastname">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>
-                Apellido
-              </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                {{ element.lastname }}
-              </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="email">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>
-                Email
-              </mat-header-cell>
-              <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
-            </ng-container>
             <ng-container matColumnDef="active">
               <mat-header-cell *matHeaderCellDef mat-sort-header>
                 Habilitado

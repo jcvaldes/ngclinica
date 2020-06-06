@@ -27,6 +27,7 @@ export abstract class ComboSearchComponent<T> implements OnDestroy {
     }
   }
   protected onLoad(filter = '') {
+    debugger
     return this.service
       .getAll<T>(filter, 'id', 'asc', 0, 0)
       .subscribe((response: any) => {
@@ -53,10 +54,10 @@ export abstract class ComboSearchComponent<T> implements OnDestroy {
     } else {
       search = search.toLowerCase();
     }
-    // filter the countries
+    // filter the data
     this.filteredData.next(
       this.payload.filter(
-        result => result.description.toLowerCase().indexOf(search) > -1
+        result => result.name.toLowerCase().indexOf(search) > -1
       )
     );
   }

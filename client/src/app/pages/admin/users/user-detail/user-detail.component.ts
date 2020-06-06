@@ -50,7 +50,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.dialogRef.close(refresh);
   }
   onSubmit() {
-
+    debugger
     if (this.form.valid) {
       if (!this.form.get('id').value) {
         this._userService.add<User>(this.form.value).subscribe(
@@ -88,7 +88,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.userSubscription = this._userService
       .getSingle<User>(data.id)
       .subscribe((res: any) => {
-        debugger
         this.user = res.payload;
       });
   }
