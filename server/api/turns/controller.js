@@ -44,7 +44,7 @@ class TurnsController {
       })
   }
   static Update(req, res) {
-    const { rolename, description, active, permissions } = req.body
+    const { name, description, active, permissions } = req.body
     const id = +req.params.id
     if (permissions.length > 0) {
       db.Role.findOne({
@@ -65,7 +65,7 @@ class TurnsController {
       db.Role.update(
         {
           id,
-          rolename,
+          name,
           description,
           active,
         },

@@ -27,7 +27,6 @@ export abstract class ComboSearchComponent<T> implements OnDestroy {
     }
   }
   protected onLoad(filter = '') {
-    debugger
     return this.service
       .getAll<T>(filter, 'id', 'asc', 0, 0)
       .subscribe((response: any) => {

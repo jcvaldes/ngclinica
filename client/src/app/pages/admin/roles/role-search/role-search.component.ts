@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { ComboSearchComponent } from '../../../../shared/combo-search/combo-search.component';
 
 import { UserService } from '../../users/user.service';
@@ -14,6 +14,7 @@ import { RoleService } from '../role.service';
 })
 export class RoleSearchComponent extends ComboSearchComponent<Role> {
   selected: string;
+  @Output() selectionChange = new EventEmitter();
   constructor(public _roleService: RoleService) {
     super(_roleService, false);
   }
@@ -21,6 +22,8 @@ export class RoleSearchComponent extends ComboSearchComponent<Role> {
     const selected = _.filter(this.payload, (el) => {
       return el.id === evt.value[0];
     });
-    this.selected = selected[0].rolename;
+    this.selected = selected[0].name;
+    debugger
+    this.selectionChange.emit(evt.value);
   }
 }

@@ -19,7 +19,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
   roleSubscription: Subscription = new Subscription();
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
-    rolename: new FormControl(null, Validators.required),
+    name: new FormControl(null, Validators.required),
     description: new FormControl(null),
     active: new FormControl(true),
   });
@@ -83,7 +83,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.role = res.payload;
         this.form.get('id').setValue(this.role.id);
-        this.form.get('rolename').setValue(this.role.rolename);
+        this.form.get('name').setValue(this.role.name);
         this.form.get('description').setValue(this.role.description);
         this.form.get('active').setValue(this.role.active);
       }, err => this.notificationService.error(`:: ${err}`));

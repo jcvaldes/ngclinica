@@ -22,7 +22,7 @@ import { NotificationService } from '../../../../services/notification.service';
 export class RoleListComponent implements OnInit, AfterViewInit {
   dataSource: TableDataSource<Role>;
   displayedColumns: string[] = [
-    'rolename',
+    'name',
     'active',
     'actions',
   ];

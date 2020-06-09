@@ -73,6 +73,18 @@
               </mat-header-cell>
               <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
             </ng-container>
+            <ng-container matColumnDef="roles">
+              <mat-header-cell *matHeaderCellDef>
+                Roles
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <ul>
+                  <li *ngFor="let role of element.roles">
+                    {{ role.name }}
+                  </li>
+                </ul>
+              </mat-cell>
+            </ng-container>
             <ng-container matColumnDef="active">
               <mat-header-cell *matHeaderCellDef mat-sort-header>
                 Habilitado

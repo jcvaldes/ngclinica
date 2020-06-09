@@ -26,6 +26,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     'fullname',
     'lastname',
     'email',
+    'roles',
     'active',
     'actions',
   ];
@@ -43,6 +44,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     // _userService.url = '/api/user';
     // this.dataSource = this.route.snapshot.data['users'];
     this.route.data.subscribe((data: {users: TableDataSource<User>}) => {
+      debugger
       this.dataSource = data.users;
     });
   }
@@ -84,25 +86,26 @@ export class UserListComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        // this._userService.delete<User>(id).subscribe(
-        //   () => {
-        //     this.notificationService.success(
-        //       'El paciente seleccionado ha sido Eliminado',
-        //     );
-        //     this.loadPage();
-        //   },
-        //   (err) => {
-        //     console.log(err);
-        //     Swal.fire({
-        //       title: 'Reglas de Validación',
-        //       text: err,
-        //       icon: 'error',
-        //       showConfirmButton: false,
-        //       timer: 2000,
-        //       animation: false,
-        //     });
-        //   },
-        // );
+        this._userService.delete<User>(id).subscribe(
+          () => {
+            this.notificationService.success(
+              'El usuario seleccionado ha sido Eliminado',
+            );
+            debugger
+            this.loadPage();
+          },
+          (err) => {
+            console.log(err);
+            // Swal.fire({
+            //   title: 'Reglas de Validación',
+            //   text: err,
+            //   icon: 'error',
+            //   showConfirmButton: false,
+            //   timer: 2000,
+            //   animation: false,
+            // });
+          },
+        );
       }
     });
   }

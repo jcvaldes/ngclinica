@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { User } from '../user.model';
 import { NotificationService } from '../../../../services/notification.service';
 import { UserService } from '../user.service';
+import { validRoles } from '../../../../utils/enums';
 
 declare var $: any;
 @Component({
@@ -15,11 +16,14 @@ declare var $: any;
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss']
 })
+
 export class UserDetailComponent implements OnInit, OnDestroy {
   user: User;
+  isProfessional = false;
   userSubscription: Subscription = new Subscription();
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
+    SpecialityId: new FormControl([]),
     fullname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -42,7 +46,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
   }
-  ngOnInit() {}
+  ngOnInit() { }
   onClear() {
     this.onClose();
   }
@@ -90,5 +94,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.user = res.payload;
       });
+  }
+  onSelectionChange(evt) {
+    this.isProfessional = (evt.indexOf(validRoles.Profesional) >= 0);
   }
 }

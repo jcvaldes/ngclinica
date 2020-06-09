@@ -10,7 +10,7 @@
         (+{{comboCtrl.value.length - 1}} {{comboCtrl.value?.length === 2 ? 'otro' : 'otros'}})
       </span>
     </mat-select-trigger>
-    <mat-option *ngFor="let c of filteredData | async" [value]="c.id">{{c.rolename}}</mat-option>
+    <mat-option *ngFor="let c of filteredData | async" [value]="c.id">{{c.name}}</mat-option>
 
   </mat-select>
 
