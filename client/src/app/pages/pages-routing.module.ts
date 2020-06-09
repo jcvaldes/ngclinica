@@ -28,9 +28,9 @@ const routes: Routes = [
     canActivate: [LoginGuard],
     loadChildren: () => import('./patients/patients.module').then(m => m.PatientsModule)
   }, {
-    path: 'turns',
+    path: 'appointments',
     canActivate: [LoginGuard],
-    loadChildren: () => import('./turns/turns.module').then(m => m.TurnsModule)
+    loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule)
   },
 ];
 

@@ -1,5 +1,5 @@
 import { User } from '../admin/users/user.model';
-export class Turn {
+export class Appointment {
   constructor(
     public UserId: number,
     public ProfesionalId: number,

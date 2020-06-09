@@ -6,21 +6,21 @@ import { fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import Swal from 'sweetalert2';
-import { TurnDetailComponent } from '../turn-detail/turn-detail.component';
+import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
-import { TurnService } from '../turn.service';
+import { AppointmentService } from '../appointment.service';
 import { TableDataSource } from '../../../shared/datasource.component';
-import { Turn } from '../turn.model';
+import { Appointment } from '../appointment.model';
 
 
 @Component({
-  selector: 'app-turn-list',
-  templateUrl: './turn-list.component.html',
-  styleUrls: ['./turn-list.component.scss']
+  selector: 'app-appointment-list',
+  templateUrl: './appointment-list.component.html',
+  styleUrls: ['./appointment-list.component.scss']
 })
-export class TurnListComponent implements OnInit, AfterViewInit {
-  dataSource: TableDataSource<Turn>;
+export class AppointmentListComponent implements OnInit, AfterViewInit {
+  dataSource: TableDataSource<Appointment>;
   displayedColumns: string[] = [
     'active',
     'actions',
@@ -34,17 +34,17 @@ export class TurnListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     public notificationService: NotificationService,
-    public _turnService: TurnService,
+    public _appointmentService: AppointmentService,
   ) {
-    // _turnService.url = '/api/turn';
-    // this.dataSource = this.route.snapshot.data['turns'];
-    this.route.data.subscribe((data: {turns: TableDataSource<Turn>}) => {
-      this.dataSource = data.turns;
+    // _appointmentService.url = '/api/appointment';
+    // this.dataSource = this.route.snapshot.data['appointments'];
+    this.route.data.subscribe((data: {appointments: TableDataSource<Appointment>}) => {
+      this.dataSource = data.appointments;
     });
   }
 
   ngOnInit() {
-    // this.dataSource = this.route.snapshot.data['turns'];
+    // this.dataSource = this.route.snapshot.data['appointments'];
 
     this.filter = '';
     // this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
@@ -52,7 +52,7 @@ export class TurnListComponent implements OnInit, AfterViewInit {
   }
   onCreate() {
     const dialogRef = this.dialog.open(
-      TurnDetailComponent,
+      AppointmentDetailComponent,
       this.dialogConfig(),
     );
     dialogRef.afterClosed().subscribe((result) => {
@@ -80,7 +80,7 @@ export class TurnListComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        // this._turnService.delete<Turn>(id).subscribe(
+        // this._appointmentService.delete<Appointment>(id).subscribe(
         //   () => {
         //     this.notificationService.success(
         //       'El paciente seleccionado ha sido Eliminado',
@@ -139,7 +139,7 @@ export class TurnListComponent implements OnInit, AfterViewInit {
   loadPage() {
     this.router.navigated = false;
     // tslint:disable-next-line: max-line-length
-    this.router.navigate(['/turns'],
+    this.router.navigate(['/appointments'],
       { queryParams:
         {
           filter: this.input.nativeElement.value,
@@ -147,7 +147,7 @@ export class TurnListComponent implements OnInit, AfterViewInit {
           pageSize: this.paginator.pageSize
         }
       }).then(() => {
-        // console.log(this.route.snapshot.data.turns);
+        // console.log(this.route.snapshot.data.appointments);
       });
   }
 

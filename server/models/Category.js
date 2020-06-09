@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const Speciality = sequelize.define('Speciality', {
+  const Category = sequelize.define('Category', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -16,12 +16,12 @@ export default (sequelize, DataTypes) => {
   }, {
     timestamps: false,
   });
-  Speciality.associate = (models) => {
+  Category.associate = (models) => {
     // 1:1
-    Speciality.hasOne(models.Turn, {
-      foreignKey: 'SpecialityId'
+    Category.hasOne(models.Appointment, {
+      foreignKey: 'CategoryId'
     });
   };
 
-  return Speciality;
+  return Category;
 };

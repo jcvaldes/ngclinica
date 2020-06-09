@@ -56,10 +56,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'UserId',
     });
     // 1:1
-    User.hasOne(models.Turn, {
+    User.hasOne(models.Appointment, {
       foreignKey: 'UserId'
     });
-    User.hasOne(models.Turn, {
+    User.hasOne(models.Appointment, {
       foreignKey: 'ProfesionalId'
     });
   };

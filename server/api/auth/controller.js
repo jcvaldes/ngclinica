@@ -81,7 +81,7 @@ function getMenu(roles) {
     menu[1].submenu.push({ titulo: 'Especialidades', url: '/specialities' });
     menu[1].submenu.push({ titulo: 'Pacientes', url: '/patients' });
   }
-  menu[1].submenu.push({ titulo: 'Turnos', url: '/turns' });
+  menu[1].submenu.push({ titulo: 'Turnos', url: '/appointments' });
   return menu;
 }
 

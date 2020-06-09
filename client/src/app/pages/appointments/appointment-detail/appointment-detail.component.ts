@@ -3,18 +3,18 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { NotificationService } from '../../../services/notification.service';
-import { TurnService } from '../turn.service';
+import { AppointmentService } from '../appointment.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Turn } from '../turn.model';
+import { Appointment } from '../appointment.model';
 
 declare var $: any;
 @Component({
-  selector: 'app-turn-detail',
-  templateUrl: './turn-detail.component.html',
-  styleUrls: ['./turn-detail.component.scss']
+  selector: 'app-appointment-detail',
+  templateUrl: './appointment-detail.component.html',
+  styleUrls: ['./appointment-detail.component.scss']
 })
-export class TurnDetailComponent implements OnInit, OnDestroy {
-  turn: Turn;
+export class AppointmentDetailComponent implements OnInit, OnDestroy {
+  appointment: Appointment;
   turnSubscription: Subscription = new Subscription();
 
   form: FormGroup = new FormGroup({
@@ -26,9 +26,9 @@ export class TurnDetailComponent implements OnInit, OnDestroy {
   });
   constructor(
     private notificationService: NotificationService,
-    private dialogRef: MatDialogRef<TurnDetailComponent>,
+    private dialogRef: MatDialogRef<AppointmentDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public _turnService: TurnService,
+    public _appointmentService: AppointmentService,
   ) {
     if (data) {
       this.populateForm(data);
@@ -47,7 +47,7 @@ export class TurnDetailComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.form.valid) {
       // if (!this.form.get('id').value) {
-      //   this._turnService.add<Turn>(this.form.value).subscribe(
+      //   this._appointmentService.add<Appointment>(this.form.value).subscribe(
       //     (resp: any) => {
       //       this.onClose(true);
       //       this.notificationService.success(':: El paciente ha sido creado');
@@ -57,8 +57,8 @@ export class TurnDetailComponent implements OnInit, OnDestroy {
       //     },
       //   );
       // } else {
-      //   this._turnService.update<Turn>(this.form.value).subscribe(
-      //     (turn) => {
+      //   this._appointmentService.update<Appointment>(this.form.value).subscribe(
+      //     (appointment) => {
       //       this.onClose(true);
       //       this.notificationService.success(
       //         ':: El paciente ha sido actualizado',
@@ -79,12 +79,12 @@ export class TurnDetailComponent implements OnInit, OnDestroy {
     });
   }
   populateForm(data) {
-    this.turnSubscription = this._turnService
-      .getSingle<Turn>(data.id)
+    this.turnSubscription = this._appointmentService
+      .getSingle<Appointment>(data.id)
       .subscribe((res: any) => {
-        this.turn = res.payload;
-        this.form.get('id').setValue(this.turn.id);
-        this.form.get('active').setValue(this.turn.active);
+        this.appointment = res.payload;
+        this.form.get('id').setValue(this.appointment.id);
+        this.form.get('active').setValue(this.appointment.active);
       }, err => this.notificationService.error(`:: ${err}`));1
   }
 }

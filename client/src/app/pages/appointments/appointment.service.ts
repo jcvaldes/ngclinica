@@ -5,12 +5,12 @@ import urljoin from 'url-join';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
-export class TurnService extends HttpService{
+export class AppointmentService extends HttpService{
   constructor(
     public http: HttpClient
   ) {
     super(http);
-    super.url = urljoin(environment.apiUrl, '/api/turn');
+    super.url = urljoin(environment.apiUrl, '/api/appointment');
   }
 
 }
