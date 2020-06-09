@@ -4,7 +4,7 @@ import Parametrizer from '../../utils/parametrizer'
 import RESPONSES from '../../utils/responses'
 import _ from 'lodash'
 
-class SpecialitiesController {
+class CategoriesController {
   static Fetch(req, res) {
     const { Op } = Sequelize
     const attrs = ['id', 'name', 'active']
@@ -146,4 +146,4 @@ class SpecialitiesController {
 }
 
 
-export default SpecialitiesController
+export default CategoriesController

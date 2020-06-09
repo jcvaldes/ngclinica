@@ -11,6 +11,6 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/role', roleRoutes);
 app.use('/category', categoryRoutes);
-app.use('/turn', appointmentRoutes);
+app.use('/appointment', appointmentRoutes);
 
 export default app;

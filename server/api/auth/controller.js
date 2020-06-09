@@ -78,7 +78,7 @@ function getMenu(roles) {
   if (containsAdminRole(roles) >= 0) {
     menu[1].submenu.push({ titulo: 'Usuarios', url: '/users' });
     menu[1].submenu.push({ titulo: 'Roles', url: '/roles' });
-    menu[1].submenu.push({ titulo: 'Especialidades', url: '/specialities' });
+    menu[1].submenu.push({ titulo: 'Especialidades', url: '/categories' });
     menu[1].submenu.push({ titulo: 'Pacientes', url: '/patients' });
   }
   menu[1].submenu.push({ titulo: 'Turnos', url: '/appointments' });
