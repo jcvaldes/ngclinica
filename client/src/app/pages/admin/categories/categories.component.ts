@@ -5,10 +5,10 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-specialities',
-  templateUrl: './specialities.component.html'
+  selector: 'app-categories',
+  templateUrl: './categories.component.html'
 })
-export class SpecialitiesComponent implements OnInit {
+export class CategoriesComponent implements OnInit {
   constructor() {}
   ngOnInit() {}
 }

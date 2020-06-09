@@ -19,7 +19,7 @@ export class TurnDetailComponent implements OnInit, OnDestroy {
 
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
-    SpecialityId: new FormControl(null, Validators.required),
+    CategoryId: new FormControl(null, Validators.required),
     ProfesionalId: new FormControl(null, Validators.required),
     turnDate: new FormControl(null, Validators.required),
     active: new FormControl(true),

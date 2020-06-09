@@ -14,7 +14,7 @@ import { UserListResolverGuard } from './user-list/user-list-resolver.guard';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { RolesModule } from '../roles/roles.module';
 import { UserSearchComponent } from './user-search/user-search.component';
-import { SpecialitiesModule } from '../specialities/specialities.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { SpecialitiesModule } from '../specialities/specialities.module';
     PipesModule,
     RouterModule,
     RolesModule,
-    SpecialitiesModule
+    CategoriesModule
   ],
   exports: [
     UserSearchComponent

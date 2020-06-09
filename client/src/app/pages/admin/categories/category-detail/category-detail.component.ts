@@ -4,19 +4,19 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import urlJoin from 'url-join';
 import { Subscription } from 'rxjs';
-import { Speciality } from '../speciality.model';
+import { Category } from '../category.model';
 import { NotificationService } from '../../../../services/notification.service';
-import { SpecialityService } from '../speciality.service';
+import { CategoryService } from '../category.service';
 
 declare var $: any;
 @Component({
-  selector: 'app-speciality-detail',
-  templateUrl: './speciality-detail.component.html',
-  styleUrls: ['./speciality-detail.component.scss']
+  selector: 'app-category-detail',
+  templateUrl: './category-detail.component.html',
+  styleUrls: ['./category-detail.component.scss']
 })
-export class SpecialityDetailComponent implements OnInit, OnDestroy {
-  speciality: Speciality;
-  specialitySubscription: Subscription = new Subscription();
+export class CategoryDetailComponent implements OnInit, OnDestroy {
+  Category: Category;
+  CategorySubscription: Subscription = new Subscription();
   permission = [[]];
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -25,16 +25,16 @@ export class SpecialityDetailComponent implements OnInit, OnDestroy {
   });
   constructor(
     private notificationService: NotificationService,
-    private dialogRef: MatDialogRef<SpecialityDetailComponent>,
+    private dialogRef: MatDialogRef<CategoryDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _httpService: SpecialityService,
+    private _httpService: CategoryService,
   ) {
     if (data) {
       this.populateForm(data);
     }
   }
   ngOnDestroy() {
-    this.specialitySubscription.unsubscribe();
+    this.CategorySubscription.unsubscribe();
   }
   ngOnInit() {}
   onClear() {
@@ -46,7 +46,7 @@ export class SpecialityDetailComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.form.valid) {
       if (!this.form.get('id').value) {
-        this._httpService.add<Speciality>(this.form.value).subscribe(
+        this._httpService.add<Category>(this.form.value).subscribe(
           (resp: any) => {
             this.onClose(true);
             this.notificationService.success(':: La especialidad ha sido creado');
@@ -56,8 +56,8 @@ export class SpecialityDetailComponent implements OnInit, OnDestroy {
           },
         );
       } else {
-        this._httpService.update<Speciality>(this.form.value).subscribe(
-          (speciality) => {
+        this._httpService.update<Category>(this.form.value).subscribe(
+          (Category) => {
             this.onClose(true);
             this.notificationService.success(
               ':: La especialidad ha sido actualizado',
@@ -78,13 +78,13 @@ export class SpecialityDetailComponent implements OnInit, OnDestroy {
     });
   }
   populateForm(data) {
-    this.specialitySubscription = this._httpService
-      .getSingle<Speciality>(data.id)
+    this.CategorySubscription = this._httpService
+      .getSingle<Category>(data.id)
       .subscribe((res: any) => {
-        this.speciality = res.payload;
-        this.form.get('id').setValue(this.speciality.id);
-        this.form.get('name').setValue(this.speciality.name);
-        this.form.get('active').setValue(this.speciality.active);
+        this.Category = res.payload;
+        this.form.get('id').setValue(this.Category.id);
+        this.form.get('name').setValue(this.Category.name);
+        this.form.get('active').setValue(this.Category.active);
       }, err => this.notificationService.error(`:: ${err}`));
   }
 }

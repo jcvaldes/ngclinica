@@ -1,4 +1,4 @@
-export class Speciality{
+export class Category{
   constructor(
     public name: string,
     public active: boolean,

@@ -1,4 +1,4 @@
-import { Speciality } from './speciality.model';
+import { Category } from './category.model';
 import { Injectable } from '@angular/core';
 import { HttpService } from '../../../services/http.service';
 import { HttpClient } from '@angular/common/http';
@@ -7,11 +7,11 @@ import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
 @Injectable()
-export class SpecialityService extends HttpService{
+export class CategoryService extends HttpService{
   constructor(
     public http: HttpClient
   ) {
     super(http);
-    this.url = urljoin(environment.apiUrl, '/api/speciality');
+    this.url = urljoin(environment.apiUrl, '/api/category');
   }
 }

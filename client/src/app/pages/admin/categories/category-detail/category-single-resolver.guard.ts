@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Resolve, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '../../users/user.service';
-import { Speciality } from '../speciality.model';
+import { Category } from '../category.model';
 import { HttpService } from '../../../../services/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SpecialitySingleResolverGuard implements Resolve<Speciality>  {
+export class CategorySingleResolverGuard implements Resolve<Category>  {
   constructor(private httpService: HttpService, private userService: UserService) {
-    this.httpService.url = `/api/speciality`;
+    this.httpService.url = `/api/category`;
   }
   // tslint:disable-next-line: max-line-length
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Speciality | Observable<Speciality> | Promise<Speciality> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Category | Observable<Category> | Promise<Category> {
     const id: number = +route.paramMap.get('id');
     return this.httpService.getSingle(id);
   }

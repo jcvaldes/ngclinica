@@ -7,20 +7,20 @@ import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { TableDataSource } from '../../../../shared/datasource.component';
 
 import Swal from 'sweetalert2';
-import { SpecialityDetailComponent } from '../speciality-detail/speciality-detail.component';
-import { Speciality } from '../speciality.model';
+import { CategoryDetailComponent } from '../category-detail/category-detail.component';
+import { Category } from '../category.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../../../services/http.service';
 import { UserService } from '../../users/user.service';
 import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
-  selector: 'app-speciality-list',
-  templateUrl: './speciality-list.component.html',
-  styleUrls: ['./speciality-list.component.scss']
+  selector: 'app-category-list',
+  templateUrl: './category-list.component.html',
+  styleUrls: ['./category-list.component.scss']
 })
-export class SpecialityListComponent implements OnInit, AfterViewInit {
-  dataSource: TableDataSource<Speciality>;
+export class CategoryListComponent implements OnInit, AfterViewInit {
+  dataSource: TableDataSource<Category>;
   displayedColumns: string[] = [
     'name',
     'active',
@@ -37,22 +37,22 @@ export class SpecialityListComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private _httpService: HttpService,
   ) {
-    _httpService.url = '/api/speciality';
-    // this.dataSource = this.route.snapshot.data['specialitys'];
-    this.route.data.subscribe((data: {specialities: TableDataSource<Speciality>}) => {
-      this.dataSource = data.specialities;
+    _httpService.url = '/api/category';
+    // this.dataSource = this.route.snapshot.data['categories'];
+    this.route.data.subscribe((data: {categories: TableDataSource<Category>}) => {
+      this.dataSource = data.categories;
     });
   }
 
   ngOnInit() {
-    // this.dataSource = this.route.snapshot.data['specialitys'];
+    // this.dataSource = this.route.snapshot.data['categories'];
     this.filter = '';
     this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
     this.paginator._intl.getRangeLabel = this.spanishRangeLabel;
   }
   onCreate() {
     const dialogRef = this.dialog.open(
-      SpecialityDetailComponent,
+      CategoryDetailComponent,
       this.dialogConfig(),
     );
     dialogRef.afterClosed().subscribe((result) => {
@@ -63,7 +63,7 @@ export class SpecialityListComponent implements OnInit, AfterViewInit {
   }
   onEdit(row) {
     const dialogRef = this.dialog.open(
-      SpecialityDetailComponent,
+      CategoryDetailComponent,
       this.dialogConfig(row),
     );
     dialogRef.afterClosed().subscribe((result) => {
@@ -80,7 +80,7 @@ export class SpecialityListComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        this._httpService.delete<Speciality>(id).subscribe(
+        this._httpService.delete<Category>(id).subscribe(
           (resp: any) => {
             this.notificationService.success(
               'El rol seleccionado ha sido Eliminado',
@@ -138,7 +138,7 @@ export class SpecialityListComponent implements OnInit, AfterViewInit {
   loadPage(direction = this.sort.direction) {
     this.router.navigated = false;
     // tslint:disable-next-line: max-line-length
-    this.router.navigate(['/specialitys'],
+    this.router.navigate(['/categories'],
       { queryParams:
         {
           filter: this.input.nativeElement.value,
@@ -146,7 +146,7 @@ export class SpecialityListComponent implements OnInit, AfterViewInit {
           pageSize: this.paginator.pageSize
         }
       }).then(() => {
-        // console.log(this.route.snapshot.data.specialitys);
+        // console.log(this.route.snapshot.data.categories);
       });
     // this.dataSource.load(
     //   this.input.nativeElement.value,

@@ -4,7 +4,7 @@
     placeholder="Selecciona Categoría"
     required
     #singleSelect
-    multiple
+    [multiple]="isMultiple"
     (selectionChange)="onSelectionChange($event)"
   >
     <mat-option>
@@ -14,7 +14,7 @@
         [noEntriesFoundLabel]="'No hay resultados'"
       ></ngx-mat-select-search>
     </mat-option>
-    <mat-select-trigger>
+    <mat-select-trigger *ngIf="isMultiple">
       {{ comboCtrl.value ? selected : '' }}
 
       <span

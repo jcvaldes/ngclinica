@@ -23,7 +23,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   userSubscription: Subscription = new Subscription();
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
-    SpecialityId: new FormControl([]),
+    CategoryId: new FormControl([]),
     fullname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),

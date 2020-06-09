@@ -20,9 +20,9 @@ const routes: Routes = [
     canActivate: [AdminGuard],
     loadChildren: () => import('./admin/roles/roles.module').then(m => m.RolesModule)
   }, {
-    path: 'specialities',
+    path: 'categories',
     canActivate: [AdminGuard],
-    loadChildren: () => import('./admin/specialities/specialities.module').then(m => m.SpecialitiesModule)
+    loadChildren: () => import('./admin/categories/categories.module').then(m => m.CategoriesModule)
   }, {
     path: 'patients',
     canActivate: [LoginGuard],

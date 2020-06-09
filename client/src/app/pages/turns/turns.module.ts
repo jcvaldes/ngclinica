@@ -12,7 +12,7 @@ import { NotificationService } from '../../services/notification.service';
 import { TurnsComponent } from './turns.component';
 import { TurnListResolverGuard } from './turn-list/turn-list-resolver.guard';
 import { PipesModule } from '../../pipes/pipes.module';
-import { SpecialitiesModule } from '../admin/specialities/specialities.module';
+import { CategoriesModule } from '../admin/categories/categories.module';
 import { UsersModule } from '../admin/users/users.module';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { UsersModule } from '../admin/users/users.module';
     TurnsRoutingModule,
     PipesModule,
     RouterModule,
-    SpecialitiesModule,
+    CategoriesModule,
     UsersModule
   ],
   providers: [TurnService, TurnListResolverGuard]
