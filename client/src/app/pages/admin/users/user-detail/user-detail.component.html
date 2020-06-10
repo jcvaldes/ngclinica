@@ -83,14 +83,91 @@
       </mat-form-field>
     </div>
     <div class="col-12 col-sm-12 col-md-6">
-      <app-role-search (selectionChange)="onSelectionChange($event)" [comboCtrl]="form.get('roles')"></app-role-search>
+      <app-role-search
+        (selectionChange)="onSelectionChange($event)"
+        [comboCtrl]="form.get('roles')"
+      ></app-role-search>
     </div>
   </div>
-  <div class="row" *ngIf="isProfessional">
-    <div class="col-12 col-sm-12 col-md-6">
-      <app-category-search [comboCtrl]="form.controls['CategoryId']" ></app-category-search>
+  <div class="row" *ngIf="isProfessional" >
+    <div class="col-12 col-sm-6 col-md-6">
+      <app-category-search
+        [comboCtrl]="form.controls['CategoryId']"
+      ></app-category-search>
+    </div>
+    <div class="col-12 col-sm-3 col-md-3">
+      <div class="ngx-timepicker-field-example">
+     
+      </div>
+    </div>
+    
+    <div class="col-12">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> #. </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="day">
+          <th mat-header-cell *matHeaderCellDef> Día </th>
+          <td mat-cell *matCellDef="let element"> {{element.day}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="timeStart">
+          <th mat-header-cell *matHeaderCellDef> Horario Entrada </th>
+          <td mat-cell *matCellDef="let element"> 
+            <ngx-timepicker-field
+            placeholder="Inicio"
+            [format]="24"
+            [formControlName]="element.timeStart"
+            ></ngx-timepicker-field>
+          </td>
+        </ng-container>
+      
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="timeEnd">
+          <th mat-header-cell *matHeaderCellDef> Horario Salida </th>
+          <td mat-cell *matCellDef="let element">
+            <ngx-timepicker-field
+            placeholder="Inicio"
+            [format]="24"
+            [formControlName]="element.timeEnd"
+            ></ngx-timepicker-field>
+
+            </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            (click)="selection.toggle(row)">
+        </tr>
+      </table>
+      
     </div>
   </div>
+
   <div class="row">
     <div class="col-12 col-sm-12 col-md-6">
       <mat-slide-toggle formControlName="active" ngchecked="[active]">
