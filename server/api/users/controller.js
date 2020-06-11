@@ -97,7 +97,6 @@ class UsersController {
     db.sequelize
       .transaction({ autocommit: false })
       .then(async (t) => {
-        debugger
         const userModel = await db.User.create(
           {
             fullname,
@@ -110,11 +109,8 @@ class UsersController {
             active,
           },
           { transaction: t },
-        ).catch(err => {
-          debugger
-        })
+        )
         userModel.password = ':P'
-        debugger
         const rolesModel = await db.Role.findAll(
           {
             where: {
@@ -135,10 +131,8 @@ class UsersController {
           },
           { transaction: t },
         )
-        debugger
         await userModel.setRoles(rolesModel, { transaction: t })
-        await userModel.setCategories(rolesModel, { transaction: t })
-
+        await userModel.setCategories(categoriesModel, { transaction: t })
         t.commit()
         return userModel
       })
@@ -149,7 +143,6 @@ class UsersController {
         })
       })
       .catch((err) => {
-        debugger
         res
           .status(400)
           .json({ description: RESPONSES.DB_CONNECTION_ERROR + err })

@@ -59,7 +59,7 @@ export default (sequelize, DataTypes) => {
     User.belongsToMany(models.Category, {
       through: { model: models.UserCategory },
       as: 'categories',
-      foreignKey: 'CategoryId',
+      foreignKey: 'UserId',
     });
 
     // 1:1

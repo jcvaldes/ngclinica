@@ -30,14 +30,14 @@ export default (sequelize, DataTypes) => {
     // });
     // User.belongsToMany(Role, { through: 'RoleUser' }),
 
-    UserCategory.belongsTo(models.User, {
-      foreignKey: 'UserId',
-      targetKey: 'id',
-    });
-    UserCategory.belongsTo(models.Category, {
-      foreignKey: 'CategoryId',
-      targetKey: 'id',
-    });
+    // UserCategory.belongsTo(models.User, {
+    //   foreignKey: 'UserId',
+    //   targetKey: 'id',
+    // });
+    // UserCategory.belongsTo(models.Category, {
+    //   foreignKey: 'CategoryId',
+    //   targetKey: 'id',
+    // });
   };
   // Method 3 via the direct method
   UserCategory.beforeCreate((UserCategory, options) => {
