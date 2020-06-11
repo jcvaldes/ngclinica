@@ -21,6 +21,12 @@ export default (sequelize, DataTypes) => {
     Category.hasOne(models.Appointment, {
       foreignKey: 'CategoryId'
     });
+    // M:M
+    Category.belongsToMany(models.User, {
+      through: { model: models.UserCategory },
+      as: 'users',
+      foreignKey: 'UserId',
+    });
   };
 
   return Category;

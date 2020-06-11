@@ -44,7 +44,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
     // _userService.url = '/api/user';
     // this.dataSource = this.route.snapshot.data['users'];
     this.route.data.subscribe((data: {users: TableDataSource<User>}) => {
-      debugger
       this.dataSource = data.users;
     });
   }

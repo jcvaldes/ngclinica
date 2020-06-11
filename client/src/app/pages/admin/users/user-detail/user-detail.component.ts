@@ -28,15 +28,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   userSubscription: Subscription = new Subscription();
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
-    CategoryId: new FormControl([]),
     fullname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl(null, Validators.required),
     confirmPassword: new FormControl(null, Validators.required),
+    categories: new FormControl([]),
     roles: new FormControl([], Validators.required),
-    timeStart: new FormControl(null),
-    timeEnd: new FormControl(null),
     active: new FormControl(true),
   });
   constructor(
@@ -125,6 +123,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+  setDefaultTime(evt) {
+    evt.stopPropagation();
+    debugger
+  }
+  timeChanged(evt, el) {
+    el.timeStart = evt;
   }
 }
 export interface ScheduleElement {
