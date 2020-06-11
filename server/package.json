@@ -9,7 +9,6 @@
     "dev:inspect": "nodemon --exec babel-node --inspect app",
     "dev:debug": "DEBUG=express:*,app:* npm run dev",
     "debug": "DEBUG=express:*,app:* npm run start",
-    "build": "babel src -d lib -s",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:seed": "./node_modules/.bin/sequelize db:seed:all",
     "pretest": "eslint --ignore-path .gitignore ."
