@@ -15,11 +15,12 @@ export class LoginComponent implements OnInit {
   subscription: Subscription;
   email: string;
   password: string;
+  captchaResponse = '';
   rememberme = false;
   constructor(
     public _authService: AuthService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     init_plugins();
@@ -34,10 +35,13 @@ export class LoginComponent implements OnInit {
     this._authService.loginEmailUser( user, f.value.rememberme )
     .subscribe(
       response => {
-        debugger
         this.onLoginRedirect();
       },
       err => this.handleError);
+  }
+  resolved(captchaResponse: string) {
+    this.captchaResponse = captchaResponse;
+    console.log(`Resolved response token: ${captchaResponse}`);
   }
   onLoginFacebook() { }
   onLoginGoogle() { }

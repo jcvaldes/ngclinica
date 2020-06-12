@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserService } from '../pages/admin/users/user.service';
 import { NotificationService } from '../services/notification.service';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { NotificationService } from '../services/notification.service';
     AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    RecaptchaModule,  // this is the recaptcha main module
+    RecaptchaFormsModule, // this is the module for form incase form validation
   ],
   providers: [UserService, NotificationService]
 })

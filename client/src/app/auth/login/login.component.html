@@ -44,6 +44,14 @@
             />
           </div>
         </div>
+        <div class="form-group">
+          <div class="col-xs-12">
+            <re-captcha
+              (resolved)="resolved($event)"
+              siteKey="6Le-8qMZAAAAAPJIQ-la53F-OO5zlyDR2-1Wp_R3"
+            ></re-captcha>
+          </div>
+        </div>
         <div class="form-group row">
           <div class="col-md-12">
             <div class="checkbox checkbox-primary pull-left p-t-0">
@@ -70,7 +78,7 @@
           <div class="col-xs-12">
             <button
               *ngIf="!loading"
-              [disabled]="f.invalid"
+              [disabled]="f.invalid || captchaResponse == ''"
               class="btn btn-info btn-lg btn-block text-uppercase btn-rounded"
               type="submit"
             >
@@ -78,7 +86,7 @@
             </button>
             <button
               *ngIf="loading"
-              [disabled]="true"
+              [disabled]="f.invalid || captchaResponse == ''"
               class="btn btn-info btn-lg btn-block text-uppercase btn-rounded"
             >
               <i class="fa fa-spin fa-sync"></i>
