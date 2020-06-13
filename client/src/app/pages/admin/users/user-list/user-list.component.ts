@@ -56,15 +56,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
     // this.paginator._intl.getRangeLabel = this.spanishRangeLabel;
   }
   onCreate() {
-    const dialogRef = this.dialog.open(
-      UserDetailComponent,
-      this.dialogConfig(),
-    );
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadPage();
-      }
-    });
+    // const dialogRef = this.dialog.open(
+    //   UserDetailComponent,
+    //   this.dialogConfig(),
+    // );
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result) {
+    //     this.loadPage();
+    //   }
+    // });
   }
   onEdit(row) {
     const dialogRef = this.dialog.open(
