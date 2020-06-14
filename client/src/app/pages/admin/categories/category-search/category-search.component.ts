@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ComboSearchComponent } from '../../../../shared/combo-search/combo-search.component';
 
 import { UserService } from '../../users/user.service';
@@ -6,6 +6,7 @@ import { Category } from '../category.model';
 import _ from 'lodash';
 import { HttpService } from '../../../../services/http.service';
 import { CategoryService } from '../category.service';
+import { User } from '../../users/user.model';
 
 @Component({
   selector: 'app-category-search',
@@ -15,13 +16,14 @@ import { CategoryService } from '../category.service';
 export class CategorySearchComponent extends ComboSearchComponent<Category> {
   selected: string;
   @Input() isMultiple = true;
-  constructor(public _CategoryService: CategoryService) {
-    super(_CategoryService, false);
+  @Output() categoryChanged = new EventEmitter<User[]>();
+  constructor(public _categoryService: CategoryService) {
+    super(_categoryService, false);
   }
   onSelectionChange(evt) {
     const selected = _.filter(this.payload, (el) => {
-      return el.id === evt.value[0];
+      return el.id === evt.value;
     });
-    this.selected = selected[0].name;
+    this.categoryChanged.emit(selected[0]);
   }
 }

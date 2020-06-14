@@ -16,6 +16,21 @@ class CategoriesController {
         [Op.like]: `%${filter}%`,
       }
     }
+    options.include = [
+      {
+        model: db.User,
+        as: 'users',
+        attributes: ['id', 'fullname', 'lastname', 'img', 'email'],
+        include: [
+          {
+            model: db.Schedule,
+          },
+        ],
+        through: {
+          attributes: ['UserId', 'CategoryId'],
+        },
+      },
+    ]
     db.Category.findAndCountAll(options)
       .then((data) => {
         res.status(200).json(Parametrizer.responseOk(data, options))
@@ -103,8 +118,7 @@ class CategoriesController {
         },
         { where: { id } },
       )
-        .then((speciality) => {
-        })
+        .then((speciality) => {})
         .catch(Sequelize.ValidationError, (msg) =>
           res.status(422).json({ message: msg.errors[0].message }),
         )
@@ -144,6 +158,4 @@ class CategoriesController {
       )
   }
 }
-
-
 export default CategoriesController

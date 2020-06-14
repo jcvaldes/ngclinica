@@ -20,7 +20,6 @@ export abstract class ComboSearchComponent<T> implements OnDestroy {
     public service: HttpService,
     public isServerSide = false
   ) {
-    debugger
     if (!isServerSide) {
       this.onLoad();
       this.onChange();
@@ -30,6 +29,7 @@ export abstract class ComboSearchComponent<T> implements OnDestroy {
     return this.service
       .getAll<T>(filter, 'id', 'asc', 0, 0)
       .subscribe((response: any) => {
+        debugger
         this.payload = response.payload;
         this.filteredData.next(this.payload.slice());
       });

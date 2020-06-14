@@ -7,12 +7,18 @@
   <input type="hidden" formControlName="id">
   <div class="row">
     <div class="col-12 col-sm-12 col-md-12">
-      <app-category-search [isMultiple]="false" [comboCtrl]="form.controls['CategoryId']" ></app-category-search>
+      <app-category-search (categoryChanged)="categoryChanged($event)" [isMultiple]="false" [comboCtrl]="form.controls['CategoryId']" ></app-category-search>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-sm-12 col-md-12">
-      <app-user-search [comboCtrl]="form.controls['ProfesionalId']" [roles]="[2]"></app-user-search>
+      <mat-form-field>
+        <mat-select formControlName="ProfesionalId" placeholder="Selecciona Profesional" required>
+
+          <mat-option *ngFor="let p of professionals" [value]="p.id">{{p.fullname}} {{p.lastname}}</mat-option>
+      
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
   <div class="row">

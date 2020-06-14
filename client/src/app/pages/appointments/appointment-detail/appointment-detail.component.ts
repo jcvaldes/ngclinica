@@ -6,6 +6,8 @@ import { NotificationService } from '../../../services/notification.service';
 import { AppointmentService } from '../appointment.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Appointment } from '../appointment.model';
+import { User } from '../../admin/users/user.model';
+import { Category } from '../../admin/categories/category.model';
 
 declare var $: any;
 @Component({
@@ -14,6 +16,7 @@ declare var $: any;
   styleUrls: ['./appointment-detail.component.scss']
 })
 export class AppointmentDetailComponent implements OnInit, OnDestroy {
+  professionals: User[] = [];
   appointment: Appointment;
   turnSubscription: Subscription = new Subscription();
 
@@ -85,6 +88,9 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
         this.appointment = res.payload;
         this.form.get('id').setValue(this.appointment.id);
         this.form.get('active').setValue(this.appointment.active);
-      }, err => this.notificationService.error(`:: ${err}`));1
+      }, err => this.notificationService.error(`:: ${err}`));
+  }
+  categoryChanged(category: Category) {
+    this.professionals = category.users;
   }
 }

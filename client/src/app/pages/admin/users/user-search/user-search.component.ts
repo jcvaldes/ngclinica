@@ -21,7 +21,6 @@ extends ComboSearchComponent<User> implements OnChanges {
     if (!this.roles) {
       return;
     }
-    debugger
     return this.service
       .getAll<User>(filter, 'id', 'asc', 0, 0, this.roles)
       .subscribe((response: any) => {

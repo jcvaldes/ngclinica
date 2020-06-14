@@ -12,6 +12,7 @@ import { validRoles } from '../../../../utils/enums';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Schedule } from '../../../../models/schedule.model';
+import { Router } from '@angular/router';
 
 declare var $: any;
 @Component({
@@ -21,7 +22,7 @@ declare var $: any;
 })
 
 export class UserDetailComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['select', 'id', 'day', 'timeStart', 'timeEnd'];
+  displayedColumns: string[] = [ 'day', 'timeStart', 'timeEnd'];
   selection = new SelectionModel<ScheduleElement>(true, []);
   dataSource = new MatTableDataSource<ScheduleElement>(ELEMENT_DATA);
   user: User;
@@ -41,9 +42,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   });
   constructor(
     private notificationService: NotificationService,
-    // private dialogRef: MatDialogRef<UserDetailComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: any,
-    private _userService: UserService
+    private _userService: UserService,
+    private router: Router
   ) {
     this.form.get('schedule').setValue(this.dataSource.data);
   }
@@ -58,10 +58,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     // this.dialogRef.close(refresh);
   }
   onSubmit() {
-    debugger
     if (this.form.valid) {
       if (!this.form.get('id').value) {
-        debugger
         this.form.get('schedule').setValue(
           this.filterSchedule(this.form.get('schedule').value)
         );
@@ -69,6 +67,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           (resp: any) => {
             this.onClose(true);
             this.notificationService.success(':: El usuario ha sido creado');
+            this.router.navigate(['/users'])
           },
           (err) => {
             this.notificationService.error(`:: ${err}`);
@@ -107,33 +106,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     debugger
     this.isProfessional = (evt.indexOf(validRoles.Profesional) >= 0);
   }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: ScheduleElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
-  }
   setDefaultTime(evt) {
     evt.stopPropagation();
-    debugger
+    
   }
   timeChanged(evt, el, ts) {
-    debugger
+    
     if (ts === 's') {
       el.timeStart = evt;
     } else {
