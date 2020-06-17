@@ -27,12 +27,12 @@ class CategoriesController {
           },
         ],
         through: {
-          attributes: ['UserId', 'CategoryId'],
+          attributes: ['id', 'UserId', 'CategoryId'],
         },
       },
     ]
     db.Category.findAndCountAll(options)
-      .then((data) => {
+      .then(data => {
         res.status(200).json(Parametrizer.responseOk(data, options))
       })
       .catch(Sequelize.ValidationError, (msg) =>
@@ -50,13 +50,6 @@ class CategoriesController {
       where: {
         id,
       },
-      include: [
-        {
-          model: db.Permission,
-          as: 'Permissions',
-          through: { attributes: [] },
-        },
-      ],
     })
       .then((result) => {
         if (result === 0) {

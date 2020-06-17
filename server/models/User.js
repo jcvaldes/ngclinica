@@ -71,7 +71,7 @@ export default (sequelize, DataTypes) => {
     });
 
     // 1:1 Profesional
-    User.hasOne(models.Schedule, {
+    User.hasMany(models.Schedule, {
       foreignKey: 'ProfesionalId'
     });
   };
