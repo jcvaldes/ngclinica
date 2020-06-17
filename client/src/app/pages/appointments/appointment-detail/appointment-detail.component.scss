@@ -1,9 +1,15 @@
-.mat-form-field {
-  width: 100%;
-}
 
-button.mat-mini-fab.mat-warn {
-  position: absolute;
-  top: 5px;
-  right: 21px;
-}
+  .mat-form-field {
+    width: 100%;
+  }
+
+  button.mat-mini-fab.mat-warn {
+    position: absolute;
+    top: 5px;
+    right: 21px;
+  }
+
+  .mat-chip-list-wrapper {
+    display: block!important;
+  }
+

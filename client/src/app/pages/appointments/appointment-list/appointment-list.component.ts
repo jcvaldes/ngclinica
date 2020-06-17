@@ -50,17 +50,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit {
     // this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
     // this.paginator._intl.getRangeLabel = this.spanishRangeLabel;
   }
-  onCreate() {
-    const dialogRef = this.dialog.open(
-      AppointmentDetailComponent,
-      this.dialogConfig(),
-    );
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadPage();
-      }
-    });
-  }
+ 
   onEdit(row) {
     // const dialogRef = this.dialog.open(
     //   TurnDetailComponent,

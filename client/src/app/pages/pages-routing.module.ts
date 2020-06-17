@@ -32,6 +32,7 @@ const routes: Routes = [
     canActivate: [LoginGuard],
     loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule)
   },
+  { path: '**', component: DashboardComponent},
 ];
 
 @NgModule({

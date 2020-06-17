@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TurnsRoutingModule } from './appointments-routing.module';
+import { AppointmentsRoutingModule } from './appointments-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { AppointmentService } from './appointment.service';
 import { MaterialModule } from '../../shared/material.module';
@@ -14,7 +14,7 @@ import { AppointmentListResolverGuard } from './appointment-list/appointment-lis
 import { PipesModule } from '../../pipes/pipes.module';
 import { CategoriesModule } from '../admin/categories/categories.module';
 import { UsersModule } from '../admin/users/users.module';
-
+import { NgxCalendarModule } from 'ss-ngx-calendar';
 @NgModule({
   declarations: [
     AppointmentsComponent,
@@ -24,14 +24,14 @@ import { UsersModule } from '../admin/users/users.module';
   imports: [
     CommonModule,
     MaterialModule,
-    FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    TurnsRoutingModule,
+    AppointmentsRoutingModule,
     PipesModule,
     RouterModule,
     CategoriesModule,
-    UsersModule
+    UsersModule,
+    NgxCalendarModule,
   ],
   providers: [AppointmentService, AppointmentListResolverGuard]
 })

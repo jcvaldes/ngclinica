@@ -23,7 +23,7 @@ export class User implements IUser{
     public confirmpassword?: string,
     public roles?: Role[],
     public categories?: Category[],
-    public shcedule?: Schedule[],
+    public Schedules?: Schedule[],
     public img?: string,
     public google?: string,
     public id?: string

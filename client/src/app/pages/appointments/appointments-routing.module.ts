@@ -13,8 +13,17 @@ const routes: Routes = [
     canActivateChild: [VerifyTokenGuard],
     data: { titulo: 'Gestión de Turnos' },
     children: [
-      { path: '', component: AppointmentListComponent, runGuardsAndResolvers: 'always', resolve: { appointments: AppointmentListResolverGuard } },
-      { path: 'new', component: AppointmentDetailComponent },
+      {
+        path: '',
+        component: AppointmentListComponent,
+        runGuardsAndResolvers: 'always',
+        resolve: { appointments: AppointmentListResolverGuard }
+      },
+      {
+        path: 'new',
+        component: AppointmentDetailComponent,
+        data: { titulo: 'Gestión de Turnos' },
+      },
       { path: ':id', component: AppointmentDetailComponent }
     ]
   }
@@ -24,4 +33,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TurnsRoutingModule { }
+export class AppointmentsRoutingModule { }

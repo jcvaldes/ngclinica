@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -20,7 +20,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,7 +35,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatChipsModule } from '@angular/material/chips';
+import { MatRadioModule } from '@angular/material/radio';
 const modules = [
   MatCheckboxModule,
   MatToolbarModule,
@@ -45,8 +45,8 @@ const modules = [
   MatButtonModule,
   MatInputModule,
   MatListModule,
+  MatChipsModule,
   MatGridListModule,
-  MatRadioModule,
   MatProgressSpinnerModule,
   MatSelectModule,
   MatFormFieldModule,
@@ -64,6 +64,8 @@ const modules = [
   NgxMatSelectSearchModule,
   MatAutocompleteModule,
   NgxMaterialTimepickerModule,
+  MatNativeDateModule,
+  MatRadioModule,
   // CDK
   A11yModule,
   BidiModule,
@@ -93,6 +95,7 @@ export const MY_FORMATS = {
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: LOCALE_ID, useValue: 'es-AR' },
     { provide: MAT_DATE_LOCALE, useValue: 'es-AR' },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ]
