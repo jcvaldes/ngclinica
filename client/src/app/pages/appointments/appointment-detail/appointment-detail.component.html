@@ -39,7 +39,7 @@
   <div class="row" *ngIf="professional">
     <div class="col-12 col-md-6">
       <div class="alert alert-primary text-center" role="alert">
-        El Profesional elegido atiende los días
+        <strong>El Profesional elegido atiende los días</strong>
         <mat-chip-list aria-label="Dias">
           <mat-chip
             color="primary"
@@ -60,6 +60,7 @@
                 ? 'Sábado'
                 : 'Domingo'
             }}
+            de {{ schedule.timeStart }} a {{ schedule.timeEnd }}
           </mat-chip>
         </mat-chip-list>
       </div>
@@ -73,16 +74,21 @@
         (onChooseDate)="onChooseDate($event)"
       ></ngx-calendar>
     </div>
-    
-    <div class="col-12 col-md-6">
-      <label id="example-radio-group-label">Pick your favorite season</label>
-      <!-- <mat-radio-group>
-        <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
-          {{season}}
-        </mat-radio-button>
-      </mat-radio-group> -->
 
+    <div class="col-12 col-md-2" *ngIf="timeTable">
+         <mat-radio-group class="radio-group">
+           <ul>
+             <li *ngFor="let time of timeTable; let i = index">
+               <mat-radio-button [value]="time">
+                 {{ time }}
+               </mat-radio-button>
+               
+             </li>
+           </ul>
+      </mat-radio-group>
     </div>
+
+  
   </div>
 
   <!-- <div class="row">

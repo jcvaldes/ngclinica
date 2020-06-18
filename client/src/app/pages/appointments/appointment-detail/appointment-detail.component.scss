@@ -13,3 +13,12 @@
     display: block!important;
   }
 
+  ul {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+
+    li {
+      list-style: none;
+    }
+  }

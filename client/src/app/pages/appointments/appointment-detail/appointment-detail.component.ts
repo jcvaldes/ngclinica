@@ -22,7 +22,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   atendeeDays: number[] = [];
   professionals: User[] = [];
   professional: User;
-
+  timeTable: string[];
   category: Category;
   appointment: Appointment;
   appointmentSubscription: Subscription = new Subscription();
@@ -31,7 +31,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
     id: new FormControl(null),
     CategoryId: new FormControl(null, Validators.required),
     ProfesionalId: new FormControl(null, Validators.required),
-    turnDate: new FormControl(null, Validators.required),
+    appointmentDate: new FormControl(null, Validators.required)    
     // active: new FormControl(true),
   });
   calendarOptions = {};
@@ -121,7 +121,9 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
 
   onChooseDate(date: any) {
     this.calendarValue = date;
-    this.validateSchedule();
+    if (this.validateSchedule()) {
+      this.createTimeTable();
+    };
   }
 
   onChangeDate(date: any) {
@@ -134,11 +136,33 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
     }
     if (!this.atendeeDays.includes(this.calendarValue.isoWeekday())) {
       this.notificationService.error('El profesional elegido no atiende el dia seleccionado, revisa los días en los que atiende e intenta nuevamente');
-
+      return false;
     }
     return true;
   }
-  private createTimeTable(from, to) {
+  private createTimeTable() {
+    const x = 30; // minutes interval
+    debugger
+    const schedule: any = this.professional.Schedules.find(i => i.day === this.calendarValue.isoWeekday());
+    const hourStart = +schedule.timeStart.split(':')[0];
+    const hourEnd = +schedule.timeEnd.split(':')[0];
+
+    let times = []; // time array
+    let tt = 0; // start time
+    const ap = ['AM', 'PM']; // AM-PM
+    // loop to increment the time and push results in array
+    for (let i = 0; tt < 24 * 60; i++) {
+      let hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
+      let mm = (tt % 60); // getting minutes of the hour in 0-55 format
+      times[i] =(hh % 12) +
+        ':' + ('0' + mm).slice(-2) // + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
+      tt = tt + x;
+    }
+
+    this.timeTable = times.slice(
+      times.findIndex(i => i === schedule.timeStart),
+      times.findIndex(i => i === schedule.timeEnd)
+    );
 
   }
 }
