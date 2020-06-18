@@ -22,6 +22,10 @@ import { Appointment } from '../appointment.model';
 export class AppointmentListComponent implements OnInit, AfterViewInit {
   dataSource: TableDataSource<Appointment>;
   displayedColumns: string[] = [
+    'Category',
+    'professional',
+    'appointmentDate',
+    'timeDate',
     'active',
     'actions',
   ];

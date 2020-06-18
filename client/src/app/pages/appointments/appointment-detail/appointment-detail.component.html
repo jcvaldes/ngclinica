@@ -68,15 +68,23 @@
   </div>
   <div class="row">
     <div class="col-12 col-md-6">
-      <ngx-calendar
-        #calendar
-        [options]="calendarOptions"
-        (onChooseDate)="onChooseDate($event)"
-      ></ngx-calendar>
+      <!-- <ngx-calendar
+      #calendar
+      [options]="calendarOptions"
+      (onChangeDate)="onChooseDate($event)"
+      (onChooseDate)="onChooseDate($event)" [events]="calendarEvents"
+    ></ngx-calendar> -->
+      <mat-form-field>
+        <input matInput formControlName="appointmentDate" [matDatepicker]="appointmentDate" placeholder="Fecha de Turno" (dateChange)="onChooseDate($event)" required>
+        <mat-datepicker-toggle matSuffix [for]="appointmentDate"></mat-datepicker-toggle>
+        <mat-datepicker #appointmentDate></mat-datepicker>
+        <mat-error>requerido</mat-error>
+      </mat-form-field>
+
     </div>
 
     <div class="col-12 col-md-2" *ngIf="timeTable">
-         <mat-radio-group class="radio-group">
+         <mat-radio-group class="radio-group" (change)="timeChange($event)">
            <ul>
              <li *ngFor="let time of timeTable; let i = index">
                <mat-radio-button [value]="time">
@@ -109,7 +117,7 @@
           color="primary"
           (click)="onSubmit()"
           type="submit"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || !appointmentTime"
         >
           <mat-icon>save</mat-icon>
           Guardar

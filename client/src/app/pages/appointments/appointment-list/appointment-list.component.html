@@ -40,19 +40,36 @@
             matSortDirection="asc"
             matSortDisableClear
           >
-            <ng-container matColumnDef="active">
+          <ng-container matColumnDef="Category">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Especialidad</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.Category.name }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="professional">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Profesional</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.professional.fullname }} {{element.professional.lastname }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="appointmentDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Turno</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'fullDate'}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="timeDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Hora Turno</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'h:mm a'}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
               <mat-header-cell *matHeaderCellDef mat-sort-header>
-                Habilitado
+                Atendido?
               </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span
                   class="label label-rounded"
                   [ngClass]="{
-                    'label-success': element.active,
+                    'label-warning': element.active,
                     'label-danger': !element.active
                   }"
                 >
-                  {{ element.active ? 'Habilitado' : 'Deshabilitado' }}
+                  {{ element.active ? 'Pendiente' : 'Atendido' }}
                 </span>
               </mat-cell>
             </ng-container>

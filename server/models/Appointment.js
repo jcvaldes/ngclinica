@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    turnDate: {
+    appointmentDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
@@ -47,6 +47,7 @@ export default (sequelize, DataTypes) => {
     });
     Appointment.belongsTo(models.User, {
       foreignKey: 'ProfesionalId',
+      as: 'professional',
       targetKey: 'id',
     });
   };

@@ -3,15 +3,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../services/notification.service';
 import { AppointmentService } from '../appointment.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Appointment } from '../appointment.model';
 import { User } from '../../admin/users/user.model';
 import { Category } from '../../admin/categories/category.model';
-
 import { NgxCalendarComponent } from 'ss-ngx-calendar';
+import Swal from 'sweetalert2';
 import * as moment from 'moment';
 
-declare var $: any;
 @Component({
   selector: 'app-appointment-detail',
   templateUrl: './appointment-detail.component.html',
@@ -26,31 +24,20 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   category: Category;
   appointment: Appointment;
   appointmentSubscription: Subscription = new Subscription();
-
+  appointmentTime: string = null;
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
     CategoryId: new FormControl(null, Validators.required),
     ProfesionalId: new FormControl(null, Validators.required),
-    appointmentDate: new FormControl(null, Validators.required)    
+    appointmentDate: new FormControl(null, Validators.required)
     // active: new FormControl(true),
   });
-  calendarOptions = {};
-
   calendarValue = null;
-
-  calendarOptions2 = {
-    isWeek: true
-  };
-
+  calendarOptions = { isWeek: true, isWithTime: true, fromHour: 7, toHour: 19, fromDate: moment(), minuteInterval: 30, toDate: moment().add(1, 'M') };
   calendarRange = null;
-
-
-  calendarOptions3 = {
-    isWeek: true,
-    isWithTime: true
-  };
+  calendarEvents = [moment(), '2020-06-19'];
   constructor(
-    private notificationService: NotificationService,
+    private _notificationService: NotificationService,
     public _appointmentService: AppointmentService,
   ) {
     this.form.get('ProfesionalId').valueChanges.subscribe(value => {
@@ -67,43 +54,69 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
 
   }
   onClear() {
-    this.onClose();
+    this.form.reset();
+    Object.keys(this.form.controls).forEach(key => {
+      this.form.get(key).setErrors(null);
+    });
+    this.category = null;
+    this.professional = null;
+    this.timeTable = null;
+    this.appointmentTime = null;
   }
   onClose(refresh?) {
   }
   onSubmit() {
     if (this.form.valid) {
-      // if (!this.form.get('id').value) {
-      //   this._appointmentService.add<Appointment>(this.form.value).subscribe(
-      //     (resp: any) => {
-      //       this.onClose(true);
-      //       this.notificationService.success(':: El paciente ha sido creado');
-      //     },
-      //     (err) => {
-      //       this.notificationService.error(`:: ${err}`);
-      //     },
-      //   );
-      // } else {
-      //   this._appointmentService.update<Appointment>(this.form.value).subscribe(
-      //     (appointment) => {
-      //       this.onClose(true);
-      //       this.notificationService.success(
-      //         ':: El paciente ha sido actualizado',
-      //       );
-      //     },
-      //     (err) => {
-      //       this.notificationService.error(`:: ${err}`);
-      //     },
-      //   );
-      // }
+      if (!this.form.get('id').value) {
+        Swal.fire({
+          title: '¿Deseas Confirmar el Turno?',
+          html: `
+              Estás a punto de agendar un turno con el profesional <strong>${this.professional.fullname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
+          `,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, Agendar!',
+          cancelButtonText: 'No',
+        }).then((result) => {
+          if (result.value) {
+            this._appointmentService.add<Appointment>(this.form.value).subscribe(
+              (resp: any) => {
+                Swal.fire(
+                  'Atención',
+                  'El turno ha sido creado',
+                  'success'
+                );
+                this.onClear();
+              },
+              (err) => {
+                Swal.fire(
+                  'Error',
+                  `:: ${err}`,
+                  'error'
+                );
+              },
+            );
+          }
+        });
+      } else {
+        this._appointmentService.update<Appointment>(this.form.value).subscribe(
+          (appointment) => {
+            Swal.fire(
+              'Atención',
+              ':: El turno ha sido actualizado',
+              'success'
+            );
+          },
+          (err) => {
+            Swal.fire(
+              'Error',
+              `:: ${err}`,
+              'error'
+            );
+          },
+        );
+      }
     }
-  }
-  initializeFormGroup() {
-    this.form.setValue({
-      id: null,
-
-      active: true,
-    });
   }
   populateForm(data) {
     this.appointmentSubscription = this._appointmentService
@@ -112,7 +125,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
         this.appointment = res.payload;
         this.form.get('id').setValue(this.appointment.id);
         this.form.get('active').setValue(this.appointment.active);
-      }, err => this.notificationService.error(`:: ${err}`));
+      }, err => this._notificationService.error(`:: ${err}`));
   }
   categoryChanged(category: Category) {
     this.category = category;
@@ -120,10 +133,14 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
 
   onChooseDate(date: any) {
-    this.calendarValue = date;
+    this.calendarValue = date.value;
+    this.appointmentTime = null;
+    this.timeTable = null;
     if (this.validateSchedule()) {
       this.createTimeTable();
-    };
+    } else {
+      this.form.get('appointmentDate').setValue(null);
+    }
   }
 
   onChangeDate(date: any) {
@@ -131,22 +148,20 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
   private validateSchedule() {
     if (!this.professional || !this.category) {
-      this.notificationService.error('Ingresa una especialidad y un profesional antes de continuar');
+      this._notificationService.error('Ingresa una especialidad y un profesional antes de continuar');
       return false;
     }
     if (!this.atendeeDays.includes(this.calendarValue.isoWeekday())) {
-      this.notificationService.error('El profesional elegido no atiende el dia seleccionado, revisa los días en los que atiende e intenta nuevamente');
+      this._notificationService.error('El profesional elegido no atiende el dia seleccionado, revisa los días en los que atiende e intenta nuevamente');
       return false;
     }
     return true;
   }
   private createTimeTable() {
     const x = 30; // minutes interval
-    debugger
     const schedule: any = this.professional.Schedules.find(i => i.day === this.calendarValue.isoWeekday());
     const hourStart = +schedule.timeStart.split(':')[0];
     const hourEnd = +schedule.timeEnd.split(':')[0];
-
     let times = []; // time array
     let tt = 0; // start time
     const ap = ['AM', 'PM']; // AM-PM
@@ -154,7 +169,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
     for (let i = 0; tt < 24 * 60; i++) {
       let hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
       let mm = (tt % 60); // getting minutes of the hour in 0-55 format
-      times[i] =(hh % 12) +
+      times[i] = (hh % 24) +
         ':' + ('0' + mm).slice(-2) // + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
       tt = tt + x;
     }
@@ -163,6 +178,19 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
       times.findIndex(i => i === schedule.timeStart),
       times.findIndex(i => i === schedule.timeEnd)
     );
-
+  }
+  timeChange(evt) {
+    const time = evt.value.split(':');
+    this.appointmentTime = evt;
+    debugger
+    this.form.get('appointmentDate').setValue(
+      new Date(
+        this.calendarValue.year(),
+        this.calendarValue.month(),
+        this.calendarValue.date(),
+        time[0],
+        time[1]
+      )
+    );
   }
 }
