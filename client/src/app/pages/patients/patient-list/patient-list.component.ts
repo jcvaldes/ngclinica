@@ -8,10 +8,10 @@ import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { PatientDetailComponent } from '../patient-detail/patient-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService } from '../../../services/notification.service';
-import { PatientService } from '../patient.service';
-import { TableDataSource } from '../../../shared/datasource.component';
+import { NotificationService } from '../../../services/notification.service';;
 import { Patient } from '../patient.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { HttpService } from '../../../services/http.service';
 
 
 @Component({
@@ -19,11 +19,11 @@ import { Patient } from '../patient.model';
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.scss']
 })
-export class PatientListComponent implements OnInit, AfterViewInit {
-  dataSource: TableDataSource<Patient>;
+export class PatientListComponent implements OnInit {
+  dataSource: MatTableDataSource<Patient>;
   displayedColumns: string[] = [
     'img',
-    'fullname',
+    'firstname',
     'lastname',
     'email',
     'active',
@@ -38,22 +38,10 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     public notificationService: NotificationService,
-    public _patientService: PatientService,
-  ) {
-    // _patientService.url = '/api/patient';
-    // this.dataSource = this.route.snapshot.data['patients'];
-    this.route.data.subscribe((data: {patients: TableDataSource<Patient>}) => {
-      this.dataSource = data.patients;
-    });
-  }
+    public _httpService: HttpService,
+  ) {}
 
-  ngOnInit() {
-    // this.dataSource = this.route.snapshot.data['patients'];
-
-    this.filter = '';
-    // this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
-    // this.paginator._intl.getRangeLabel = this.spanishRangeLabel;
-  }
+  ngOnInit() {}
   onCreate() {
     const dialogRef = this.dialog.open(
       PatientDetailComponent,
@@ -84,7 +72,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        // this._patientService.delete<Patient>(id).subscribe(
+        // this._httpService.delete HttpService>(id).subscribe(
         //   () => {
         //     this.notificationService.success(
         //       'El paciente seleccionado ha sido Eliminado',
@@ -113,46 +101,9 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    // server-side search
-    fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.loadPage();
-          this.filter = this.input.nativeElement.value;
-        }),
-      )
-      .subscribe();
-    // reset the paginator after sorting
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    // this.paginator.page.pipe(tap(() => {
-    //   debugger
-    //   this.loadPage();
-    // })).subscribe();
-    // on sort or paginate events, load a new page
-
-    // merge(this.sort.sortChange, this.paginator.page)
-    //   .pipe(tap(() => {
-    //     this.loadPage();
-    //   }))
-    //   .subscribe();
-  }
+ 
   loadPage() {
-    this.router.navigated = false;
-    // tslint:disable-next-line: max-line-length
-    this.router.navigate(['/patients'],
-      { queryParams:
-        {
-          filter: this.input.nativeElement.value,
-          pageIndex: this.paginator.pageIndex,
-          pageSize: this.paginator.pageSize
-        }
-      }).then(() => {
-        // console.log(this.route.snapshot.data.patients);
-      });
+
   }
 
   dialogConfig(data?) {

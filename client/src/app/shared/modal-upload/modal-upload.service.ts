@@ -3,7 +3,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 @Injectable()
 export class ModalUploadService {
   public type: string;
-  public id: string;
+  public id: number;
   public hidden: string = 'hidden';
   public notify = new EventEmitter<any>();
   constructor() {
@@ -15,7 +15,7 @@ export class ModalUploadService {
     this.id = null;
     this.type = null;
   }
-  showModal(type: string, id: string) {
+  showModal(type: string, id: number) {
     this.hidden = '';
     this.id = id;
     this.type = type;

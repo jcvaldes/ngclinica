@@ -4,7 +4,6 @@ import { PatientsComponent } from './patients.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { VerifyTokenGuard } from '../../services/guards/verify-token.guard';
-import { PatientListResolverGuard } from './patient-list/patient-list-resolver.guard';
 
 const routes: Routes = [
   {
@@ -13,7 +12,7 @@ const routes: Routes = [
     canActivateChild: [VerifyTokenGuard],
     data: { titulo: 'Gestión de Pacientes' },
     children: [
-      { path: '', component: PatientListComponent, runGuardsAndResolvers: 'always', resolve: { patients: PatientListResolverGuard } },
+      { path: '', component: PatientListComponent },
       { path: 'new', component: PatientDetailComponent },
       { path: ':id', component: PatientDetailComponent }
     ]

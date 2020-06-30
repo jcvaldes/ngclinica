@@ -10,7 +10,7 @@ class AppointmentsController {
     const attrs = [
       'id',
       'CategoryId',
-      'ProfesionalId',
+      'ProfessionalId',
       'appointmentDate',
       'createdAt',
       'active',
@@ -26,7 +26,7 @@ class AppointmentsController {
         {
           model: db.User,
           as: 'professional',
-          attributes: ['id', 'fullname', 'lastname'],
+          attributes: ['id', 'firstname', 'lastname'],
         },
       ],
       where: {

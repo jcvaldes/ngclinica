@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-
 import { NotificationService } from '../../../services/notification.service';
-import { PatientService } from '../patient.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Patient } from '../patient.model';
+import { HttpService } from '../../../services/http.service';
 
 declare var $: any;
 @Component({
@@ -26,7 +25,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<PatientDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public _patientService: PatientService,
+    public _httpService: HttpService,
   ) {
     if (data) {
       this.populateForm(data);
@@ -45,7 +44,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.form.valid) {
       // if (!this.form.get('id').value) {
-      //   this._patientService.add<Patient>(this.form.value).subscribe(
+      //   this._httpService.add<HttpService>(this.form.value).subscribe(
       //     (resp: any) => {
       //       this.onClose(true);
       //       this.notificationService.success(':: El paciente ha sido creado');
@@ -55,7 +54,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       //     },
       //   );
       // } else {
-      //   this._patientService.update<Patient>(this.form.value).subscribe(
+      //   this._httpService.update<HttpService>(this.form.value).subscribe(
       //     (patient) => {
       //       this.onClose(true);
       //       this.notificationService.success(
@@ -77,8 +76,8 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     });
   }
   populateForm(data) {
-    // this.patientSubscription = this._patientService
-    //   .getSingle<Patient>(data.id)
+    // this.patientSubscription = this._httpService
+    //   .HttpService<Patient>(data.id)
     //   .subscribe((res: any) => {
     //     this.patient = res.payload;
     //     this.form.get('id').setValue(this.patient.id);

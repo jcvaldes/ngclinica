@@ -9,7 +9,7 @@ export class FileUploadService {
     this.uploadUrl = urljoin(environment.apiUrl, '/upload');
   }
 
-  fileUpload(file: File, type: string, id: string) {
+  fileUpload(file: File, type: string, id: number) {
     return new Promise((resolve, reject) => {
       let formData = new FormData();
       let xhr = new XMLHttpRequest();

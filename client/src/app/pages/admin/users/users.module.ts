@@ -1,43 +1,42 @@
+import { CategoriesModule } from './../categories/categories.module';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { UsersRoutingModule } from './users-routing.module';
-import { SharedModule } from '../../../shared/shared.module';
-import { UserService } from './user.service';
 import { MaterialModule } from '../../../shared/material.module';
-import { UserListComponent } from './user-list/user-list.component';
-import { UserDetailComponent } from './user-detail/user-detail.component';
-import { NotificationService } from '../../../services/notification.service';
+import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
-import { UserListResolverGuard } from './user-list/user-list-resolver.guard';
-import { PipesModule } from '../../../pipes/pipes.module';
-import { RolesModule } from '../roles/roles.module';
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { SharedModule } from '../../../shared/shared.module';
 import { UserSearchComponent } from './user-search/user-search.component';
-import { CategoriesModule } from '../categories/categories.module';
+import { PipesModule } from '../../../pipes/pipes.module';
+import { ProfileComponent } from './profile/profile.component';
+
+
 
 @NgModule({
-  declarations: [
-    UsersComponent,
-    UserListComponent,
-    UserDetailComponent,
-    UserSearchComponent
-  ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
-    SharedModule,
     ReactiveFormsModule,
     UsersRoutingModule,
     PipesModule,
-    RouterModule,
-    RolesModule,
+    SharedModule,
     CategoriesModule
   ],
-  exports: [
+  declarations: [
+    UsersComponent,
+    UserDetailComponent,
+    ProfileComponent,
+    UserListComponent,
     UserSearchComponent
   ],
-  providers: [UserService, NotificationService, UserListResolverGuard]
+  exports: [
+    UserSearchComponent,
+    UserDetailComponent
+  ],
+  providers: [],
+  entryComponents: []
 })
 export class UsersModule {}

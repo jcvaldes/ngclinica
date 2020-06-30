@@ -1,7 +1,8 @@
+import { Patient } from '../pages/patients/patient.model';
 export enum validRoles {
   Admin = 1,
-  Profesional,
-  Paciente,
+  Professional,
+  Patient,
 }
 
 export enum validDays {

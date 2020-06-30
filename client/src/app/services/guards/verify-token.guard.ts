@@ -9,6 +9,7 @@ export class VerifyTokenGuard implements CanActivate, CanActivateChild {
     public _authService: AuthService
   ) { }
   canActivate(): Promise<boolean> | boolean {
+    debugger
     return this.checkExpiresToken();
   }
   // tslint:disable-next-line: max-line-length

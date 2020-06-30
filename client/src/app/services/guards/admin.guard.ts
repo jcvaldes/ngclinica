@@ -6,13 +6,14 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { validRoles } from '../../utils/enums';
 
 @Injectable({ providedIn: 'root' })
 export class AdminGuard implements CanActivate {
   constructor(public _authService: AuthService) {}
   canActivate() {
-    let roles = this._authService.user.roles;
-    if (containsAdminRole(roles) >= 0) {
+    let role = this._authService.user.role;
+    if (containsAdminRole(role)) {
       return true;
     } else {
       this._authService.logout();
@@ -20,6 +21,6 @@ export class AdminGuard implements CanActivate {
     }
   }
 }
-function containsAdminRole(roles) {
-  return roles.findIndex(role => role.name === 'Administrador');
+function containsAdminRole(role) {
+  return role  === validRoles.Admin;
 }

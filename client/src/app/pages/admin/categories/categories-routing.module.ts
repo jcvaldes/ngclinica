@@ -3,8 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
-import { CategoryListResolverGuard } from './category-list/category-list-resolver.guard';
-import { CategorySingleResolverGuard } from './category-detail/category-single-resolver.guard';
 import { VerifyTokenGuard } from '../../../services/guards/verify-token.guard';
 
 const routes: Routes = [
@@ -16,12 +14,10 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: CategoryListComponent,
-        runGuardsAndResolvers: 'always',
-        resolve: { categories: CategoryListResolverGuard }
+        component: CategoryListComponent
       },
       { path: 'new', component: CategoryDetailComponent },
-      { path: ':id', component: CategoryDetailComponent, resolve: { Category: CategorySingleResolverGuard } },
+      { path: ':id', component: CategoryDetailComponent },
     ]
   }
 ];

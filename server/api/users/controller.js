@@ -3,41 +3,25 @@ import { Sequelize } from '../../models'
 import Parametrizer from '../../utils/parametrizer'
 import RESPONSES from '../../utils/responses'
 const { Op } = Sequelize
+const validRoles = require('../../utils/validRoles')
 class UsersController {
   static Fetch(req, res) {
-    let roles = req.query.roles.split(',')
     const attrs = [
       'id',
       'img',
-      'fullname',
+      'firstname',
       'lastname',
       'email',
+      'role',
+      'img',
       'active',
       'createdAt',
     ]
-    req.query.active = undefined
-    const options = Parametrizer.getOptions(req.query, attrs)
-    roles = roles.map((i) => +i)
-
-    options.include = [
-      {
-        model: db.Role,
-        attributes: ['id', 'name'],
-        as: 'roles',
-        through: { attributes: [] },
-        where:
-          roles.length > 0
-            ? {
-                [Op.or]: {
-                  id: roles,
-                },
-              }
-            : null,
-      },
-    ]
-    db.User.findAndCountAll(options)
+    db.User.findAndCountAll({
+      attributes: attrs,
+    })
       .then((data) => {
-        res.status(200).json(Parametrizer.responseOk(data, options))
+        res.status(200).json(data.rows)
       })
       .catch(Sequelize.ValidationError, (msg) =>
         res.status(422).json({ message: msg.errors[0].message }),
@@ -49,23 +33,28 @@ class UsersController {
       })
   }
   static FetchOne(req, res) {
-    const attrs = ['id', 'fullname', 'lastname', 'email']
+    const attrs = ['id', 'firstname', 'lastname', 'email', 'img', 'role']
     const id = +req.params.id
     db.User.findOne({
-      where: {
-        id,
-      },
       attributes: attrs,
       include: [
         {
-          model: db.Role,
-          as: 'roles',
-          through: { attributes: ['UserId', 'RoleId'] },
-        },
+          model: db.Professional,
+          include: [
+            {
+              model: db.Category,
+              as: 'categories',
+              through: ['id'],
+            },
+            {
+              model: db.TimeSlot,
+            },
+          ],
+        }
       ],
-      // order: [
-      //   [db.LoanDetail, 'id', 'ASC']
-      // ]
+      where: {
+        id,
+      },
     })
       .then((user) => {
         if (!user) {
@@ -74,8 +63,7 @@ class UsersController {
           })
         } else {
           res.status(200).json({
-            ok: true,
-            payload: user,
+            user,
           })
         }
       })
@@ -91,56 +79,65 @@ class UsersController {
       })
   }
   static Create(req, res) {
-    const { fullname, lastname, email, password, phone, img, roles, categories, schedule } = req.body
-    const is_verified = false
-    const active = true
+    const {
+      firstname,
+      lastname,
+      email,
+      password,
+      phone,
+      img,
+      categories,
+      timeslot,
+    } = req.body
+    const active = req.body.active || false
+    const role = +req.body.role
     db.sequelize
       .transaction({ autocommit: false })
       .then(async (t) => {
         const userModel = await db.User.create(
           {
-            fullname,
+            firstname,
             lastname,
             email,
             password,
             phone,
-            is_verified,
             img,
+            role,
             active,
           },
           { transaction: t },
         )
         userModel.password = ':P'
-        const rolesModel = await db.Role.findAll(
-          {
-            where: {
-              [Op.or]: {
-                id: roles,
-              },
-            },
-          },
-          { transaction: t },
-        )
-        await userModel.setRoles(rolesModel, { transaction: t })
-        if(categories) {
-          const categoriesModel = await db.Category.findAll(
-            {
-              where: {
-                [Op.or]: {
-                  id: categories,
-                },
-              },
-            },
+        if (role === validRoles.Patient) {
+          userModel.setPatient(userModel, { transaction: t })
+        }
+        if (role === validRoles.Professional) {
+          const professionalModel = await db.Professional.create(
+            { UserId: userModel.id },
             { transaction: t },
           )
-          await userModel.setCategories(categoriesModel, { transaction: t })
-          await db.Schedule.bulkCreate(
-            schedule.map(i => {
-              i.ProfesionalId = userModel.id
-              return i;
+          if (categories) {
+            const categoriesModel = await db.Category.findAll(
+              {
+                where: {
+                  [Op.or]: {
+                    id: categories,
+                  },
+                },
+              },
+              { transaction: t },
+            )
+            await professionalModel.setCategories(categoriesModel, {
+              transaction: t,
             })
-            , { transaction: t });
-
+            await db.TimeSlot.bulkCreate(
+              timeslot.map((i) => {
+                i.ProfessionalId = professionalModel.id
+                return i
+              }),
+              { transaction: t },
+            )
+          }
         }
         t.commit()
         return userModel
@@ -158,19 +155,30 @@ class UsersController {
       })
   }
   static Update(req, res) {
-    const { fullname, lastname, email, password, phone, img } = req.body
-    const { id } = req.params
-    db.User.update(
-      {
-        fullname,
-        lastname,
-        email,
-        password,
-        phone,
-        img,
-      },
-      { where: { id } },
-    )
+    const {
+      firstname,
+      lastname,
+      email,
+      password,
+      phone,
+      img,
+      role,
+      active,
+    } = req.body
+    const id = +req.params.id
+    let options = {
+      firstname,
+      lastname,
+      email,
+      phone,
+      img,
+      role,
+      active,
+    }
+    if (password) {
+      options.password = password
+    }
+    db.User.update(options, { where: { id } })
       .then((user) => {
         res.status(200).json(user)
       })
@@ -185,7 +193,7 @@ class UsersController {
   }
   static Delete(req, res) {
     const { id } = req.params
-    db.User.update({ active: false }, { where: { id } })
+    db.User.destroy({ where: { id } })
       .then((result) => {
         if (result === 0) {
           res.status(404).json({

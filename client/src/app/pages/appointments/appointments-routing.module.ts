@@ -4,7 +4,6 @@ import { AppointmentsComponent } from './appointments.component';
 import { AppointmentListComponent } from './appointment-list/appointment-list.component';
 import { AppointmentDetailComponent } from './appointment-detail/appointment-detail.component';
 import { VerifyTokenGuard } from '../../services/guards/verify-token.guard';
-import { AppointmentListResolverGuard } from './appointment-list/appointment-list-resolver.guard';
 
 const routes: Routes = [
   {
@@ -15,9 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: AppointmentListComponent,
-        runGuardsAndResolvers: 'always',
-        resolve: { appointments: AppointmentListResolverGuard }
+        component: AppointmentListComponent
       },
       {
         path: 'new',

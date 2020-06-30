@@ -6,7 +6,8 @@ import urlJoin from 'url-join';
 import { Subscription } from 'rxjs';
 import { Category } from '../category.model';
 import { NotificationService } from '../../../../services/notification.service';
-import { CategoryService } from '../category.service';
+import { HttpService } from '../../../../services/http.service';
+
 
 declare var $: any;
 @Component({
@@ -27,7 +28,7 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<CategoryDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _httpService: CategoryService,
+    private _httpService: HttpService,
   ) {
     if (data) {
       this.populateForm(data);
@@ -44,31 +45,31 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     this.dialogRef.close(refresh);
   }
   onSubmit() {
-    if (this.form.valid) {
-      if (!this.form.get('id').value) {
-        this._httpService.add<Category>(this.form.value).subscribe(
-          (resp: any) => {
-            this.onClose(true);
-            this.notificationService.success(':: La especialidad ha sido creado');
-          },
-          (err) => {
-            this.notificationService.error(`:: ${err}`);
-          },
-        );
-      } else {
-        this._httpService.update<Category>(this.form.value).subscribe(
-          (Category) => {
-            this.onClose(true);
-            this.notificationService.success(
-              ':: La especialidad ha sido actualizado',
-            );
-          },
-          (err) => {
-            this.notificationService.error(`:: ${err}`);
-          },
-        );
-      }
-    }
+    // if (this.form.valid) {
+    //   if (!this.form.get('id').value) {
+    //     this._httpService.add<Category>(this.form.value).subscribe(
+    //       (resp: any) => {
+    //         this.onClose(true);
+    //         this.notificationService.success(':: La especialidad ha sido creado');
+    //       },
+    //       (err) => {
+    //         this.notificationService.error(`:: ${err}`);
+    //       },
+    //     );
+    //   } else {
+    //     this._httpService.update<Category>(this.form.value).subscribe(
+    //       (Category) => {
+    //         this.onClose(true);
+    //         this.notificationService.success(
+    //           ':: La especialidad ha sido actualizado',
+    //         );
+    //       },
+    //       (err) => {
+    //         this.notificationService.error(`:: ${err}`);
+    //       },
+    //     );
+    //   }
+    // }
   }
   initializeFormGroup() {
     this.form.setValue({
@@ -78,13 +79,13 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     });
   }
   populateForm(data) {
-    this.CategorySubscription = this._httpService
-      .getSingle<Category>(data.id)
-      .subscribe((res: any) => {
-        this.Category = res.payload;
-        this.form.get('id').setValue(this.Category.id);
-        this.form.get('name').setValue(this.Category.name);
-        this.form.get('active').setValue(this.Category.active);
-      }, err => this.notificationService.error(`:: ${err}`));
+    // this.CategorySubscription = this._httpService
+    //   .getSingle<Category>(data.id)
+    //   .subscribe((res: any) => {
+    //     this.Category = res.payload;
+    //     this.form.get('id').setValue(this.Category.id);
+    //     this.form.get('name').setValue(this.Category.name);
+    //     this.form.get('active').setValue(this.Category.active);
+    //   }, err => this.notificationService.error(`:: ${err}`));
   }
 }

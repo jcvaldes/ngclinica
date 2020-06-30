@@ -25,12 +25,12 @@
     <div class="col-12 col-md-6">
       <mat-form-field>
         <mat-select
-          formControlName="ProfesionalId"
+          formControlName="ProfessionalId"
           placeholder="Selecciona Profesional"
           required
         >
           <mat-option *ngFor="let p of professionals" [value]="p.id">
-            {{ p.fullname }} {{ p.lastname }}
+            {{ p.firstname }} {{ p.lastname }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -43,7 +43,7 @@
         <mat-chip-list aria-label="Dias">
           <mat-chip
             color="primary"
-            *ngFor="let schedule of professional.Schedules"
+            *ngFor="let schedule of professional.TimeSlot"
           >
             {{
               schedule.day === 1

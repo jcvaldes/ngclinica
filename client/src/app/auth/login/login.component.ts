@@ -24,20 +24,19 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     init_plugins();
-    this.email  = localStorage.getItem('email') || '';
-    if ( this.email.length > 1) {
+    this.email = localStorage.getItem('email') || '';
+    if (this.email.length > 1) {
       this.rememberme = true;
     }
   }
   onLogin(f: NgForm) {
-
-    const user = {email: f.value.email, password: f.value.password};
-    this._authService.loginEmailUser( user, f.value.rememberme )
-    .subscribe(
-      response => {
-        this.onLoginRedirect();
-      },
-      err => this.handleError);
+    const user = { email: f.value.email, password: f.value.password };
+    this._authService.loginEmailUser(user, f.value.rememberme)
+      .subscribe(
+        response => {
+          this.onLoginRedirect();
+        },
+        err => this.handleError(err));
   }
   resolved(captchaResponse: string) {
     this.captchaResponse = captchaResponse;

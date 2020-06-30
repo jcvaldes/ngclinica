@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../services/notification.service';
-import { AppointmentService } from '../appointment.service';
 import { Appointment } from '../appointment.model';
 import { User } from '../../admin/users/user.model';
 import { Category } from '../../admin/categories/category.model';
 import { NgxCalendarComponent } from 'ss-ngx-calendar';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
+import { HttpService } from '../../../services/http.service';
 
 @Component({
   selector: 'app-appointment-detail',
@@ -28,7 +28,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
     CategoryId: new FormControl(null, Validators.required),
-    ProfesionalId: new FormControl(null, Validators.required),
+    ProfessionalId: new FormControl(null, Validators.required),
     appointmentDate: new FormControl(null, Validators.required)
     // active: new FormControl(true),
   });
@@ -38,13 +38,13 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   calendarEvents = [moment(), '2020-06-19'];
   constructor(
     private _notificationService: NotificationService,
-    public _appointmentService: AppointmentService,
+    public _httpService: HttpService,
   ) {
-    this.form.get('ProfesionalId').valueChanges.subscribe(value => {
+    this.form.get('ProfessionalId').valueChanges.subscribe(value => {
       this.professional = this.professionals.filter(el => {
         return el.id === value;
       })[0];
-      this.atendeeDays = this.professional.Schedules.map(item => item.day);
+      this.atendeeDays = this.professional.TimeSlot.map(item => item.day);
     });
   }
   ngOnDestroy() {
@@ -66,66 +66,66 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   onClose(refresh?) {
   }
   onSubmit() {
-    if (this.form.valid) {
-      if (!this.form.get('id').value) {
-        Swal.fire({
-          title: '¿Deseas Confirmar el Turno?',
-          html: `
-              Estás a punto de agendar un turno con el profesional <strong>${this.professional.fullname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
-          `,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Sí, Agendar!',
-          cancelButtonText: 'No',
-        }).then((result) => {
-          if (result.value) {
-            this._appointmentService.add<Appointment>(this.form.value).subscribe(
-              (resp: any) => {
-                Swal.fire(
-                  'Atención',
-                  'El turno ha sido creado',
-                  'success'
-                );
-                this.onClear();
-              },
-              (err) => {
-                Swal.fire(
-                  'Error',
-                  `:: ${err}`,
-                  'error'
-                );
-              },
-            );
-          }
-        });
-      } else {
-        this._appointmentService.update<Appointment>(this.form.value).subscribe(
-          (appointment) => {
-            Swal.fire(
-              'Atención',
-              ':: El turno ha sido actualizado',
-              'success'
-            );
-          },
-          (err) => {
-            Swal.fire(
-              'Error',
-              `:: ${err}`,
-              'error'
-            );
-          },
-        );
-      }
-    }
+    // if (this.form.valid) {
+      // if (!this.form.get('id').value) {
+      //   Swal.fire({
+      //     title: '¿Deseas Confirmar el Turno?',
+      //     html: `
+      //         Estás a punto de agendar un turno con el profesional <strong>${this.professional.firstname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
+      //     `,
+      //     icon: 'warning',
+      //     showCancelButton: true,
+      //     confirmButtonText: 'Sí, Agendar!',
+      //     cancelButtonText: 'No',
+      //   }).then((result) => {
+      //     if (result.value) {
+          //   this._httpService.add<HttpService>(this.form.value).subscribe(
+          //     (resp: any) => {
+          //       Swal.fire(
+          //         'Atención',
+          //         'El turno ha sido creado',
+          //         'success'
+          //       );
+          //       this.onClear();
+          //     },
+          //     (err) => {
+          //       Swal.fire(
+          //         'Error',
+          //         `:: ${err}`,
+          //         'error'
+          //       );
+          //     },
+          //   );
+          // }
+        // });
+      // } else {
+        // this._httpService.update<HttpService>(this.form.value).subscribe(
+        //   (appointment) => {
+        //     Swal.fire(
+        //       'Atención',
+        //       ':: El turno ha sido actualizado',
+        //       'success'
+        //     );
+        //   },
+        //   (err) => {
+        //     Swal.fire(
+        //       'Error',
+        //       `:: ${err}`,
+        //       'error'
+        //     );
+        //   },
+        // );
+    //   }
+    // }
   }
   populateForm(data) {
-    this.appointmentSubscription = this._appointmentService
-      .getSingle<Appointment>(data.id)
-      .subscribe((res: any) => {
-        this.appointment = res.payload;
-        this.form.get('id').setValue(this.appointment.id);
-        this.form.get('active').setValue(this.appointment.active);
-      }, err => this._notificationService.error(`:: ${err}`));
+    // this.appointmentSubscription = this._httpService
+    // HttpService<Appointment>(data.id)
+    //   .subscribe((res: any) => {
+    //     this.appointment = res.payload;
+    //     this.form.get('id').setValue(this.appointment.id);
+    //     this.form.get('active').setValue(this.appointment.active);
+    //   }, err => this._notificationService.error(`:: ${err}`));
   }
   categoryChanged(category: Category) {
     this.category = category;
@@ -159,7 +159,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
   private createTimeTable() {
     const x = 30; // minutes interval
-    const schedule: any = this.professional.Schedules.find(i => i.day === this.calendarValue.isoWeekday());
+    const schedule: any = this.professional.TimeSlot.find(i => i.day === this.calendarValue.isoWeekday());
     const hourStart = +schedule.timeStart.split(':')[0];
     const hourEnd = +schedule.timeEnd.split(':')[0];
     let times = []; // time array

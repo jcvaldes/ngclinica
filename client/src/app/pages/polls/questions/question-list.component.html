@@ -1,0 +1,11 @@
+<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-list *ngIf="!loading">
+  <mat-list-item *ngFor="let question of questions" [routerLink]="['questions', question._id]">
+    <i *ngIf="question.icon !== 'none'" mat-list-icon class="{{question.icon}}"></i>
+    <i *ngIf="question.icon === 'none'" mat-list-icon class="material-icons help">help</i>
+    <h3 mat-line>{{question.title}}</h3>
+    <p mat-line>
+      <small>{{ question.answers.length }} respuestas - {{question.createdAt | amLocale: 'es' | amTimeAgo}}</small>
+    </p>
+  </mat-list-item>
+</mat-list>

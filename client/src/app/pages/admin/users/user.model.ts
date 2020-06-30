@@ -1,31 +1,29 @@
-import { Role } from '../roles/role.model';
 import { Category } from '../categories/category.model';
-import { Schedule } from '../../../models/schedule.model';
+import { TimeSlot } from '../../../models/timeslot.model';
 
 export interface IUser {
-  fullname: string;
+  firstname: string;
   lastname: string;
   email: string;
   password: string;
   confirmpassword?: string;
-  roles?: Role[];
+  role: number;
   categories?: Category[];
+  TimeSlot?: TimeSlot[];
   img?: string;
-  google?: string;
-  id?: string;
+  id?: number;
 }
 export class User implements IUser{
   constructor(
-    public fullname: string,
+    public firstname: string,
     public lastname: string,
     public email: string,
     public password: string,
+    public role: number,
     public confirmpassword?: string,
-    public roles?: Role[],
     public categories?: Category[],
-    public Schedules?: Schedule[],
+    public TimeSlot?: TimeSlot[],
     public img?: string,
-    public google?: string,
-    public id?: string
+    public id?: number
   ) {}
 }

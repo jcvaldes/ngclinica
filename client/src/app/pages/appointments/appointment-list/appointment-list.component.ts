@@ -9,9 +9,9 @@ import Swal from 'sweetalert2';
 import { AppointmentDetailComponent } from '../appointment-detail/appointment-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
-import { AppointmentService } from '../appointment.service';
-import { TableDataSource } from '../../../shared/datasource.component';
 import { Appointment } from '../appointment.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { HttpService } from '../../../services/http.service';
 
 
 @Component({
@@ -19,8 +19,8 @@ import { Appointment } from '../appointment.model';
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.scss']
 })
-export class AppointmentListComponent implements OnInit, AfterViewInit {
-  dataSource: TableDataSource<Appointment>;
+export class AppointmentListComponent {
+  dataSource: MatTableDataSource<Appointment>;
   displayedColumns: string[] = [
     'Category',
     'professional',
@@ -38,22 +38,10 @@ export class AppointmentListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     public notificationService: NotificationService,
-    public _appointmentService: AppointmentService,
-  ) {
-    // _appointmentService.url = '/api/appointment';
-    // this.dataSource = this.route.snapshot.data['appointments'];
-    this.route.data.subscribe((data: {appointments: TableDataSource<Appointment>}) => {
-      this.dataSource = data.appointments;
-    });
-  }
+    public _httpService: HttpService,
+  ) {}
 
-  ngOnInit() {
-    // this.dataSource = this.route.snapshot.data['appointments'];
-
-    this.filter = '';
-    // this.paginator._intl.itemsPerPageLabel = 'Ítems por página: ';
-    // this.paginator._intl.getRangeLabel = this.spanishRangeLabel;
-  }
+  ngOnInit() {}
  
   onEdit(row) {
     // const dialogRef = this.dialog.open(
@@ -103,33 +91,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    // server-side search
-    fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.loadPage();
-          this.filter = this.input.nativeElement.value;
-        }),
-      )
-      .subscribe();
-    // reset the paginator after sorting
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    // this.paginator.page.pipe(tap(() => {
-    //   debugger
-    //   this.loadPage();
-    // })).subscribe();
-    // on sort or paginate events, load a new page
 
-    // merge(this.sort.sortChange, this.paginator.page)
-    //   .pipe(tap(() => {
-    //     this.loadPage();
-    //   }))
-    //   .subscribe();
-  }
   loadPage() {
     this.router.navigated = false;
     // tslint:disable-next-line: max-line-length

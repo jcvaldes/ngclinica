@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PagesComponent } from './pages.component';
+import { UsersModule } from './admin/users/users.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { PagesComponent } from './pages.component';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    PagesRoutingModule
+    PagesRoutingModule,
   ],
   exports: [DashboardComponent],
   providers: []
