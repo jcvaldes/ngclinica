@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ScheduleComponent } from './schedule.component';
+
+import { VerifyTokenGuard } from '../../../services/guards/verify-token.guard';
 import { ScheduleListComponent } from './schedule-list/schedule-list.component';
-import { ScheduleDetailComponent } from './schedule-detail/schedule-detail.component';
-import { VerifyTokenGuard } from '../../services/guards/verify-token.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: ScheduleComponent,
     canActivateChild: [VerifyTokenGuard],
-    data: { titulo: 'Gestión de Turnos' },
+    data: { titulo: 'Agenda Médica' },
     children: [
       {
         path: '',
         component: ScheduleListComponent
       },
-      { path: ':id', component: ScheduleDetailComponent }
+
     ]
   }
 ];

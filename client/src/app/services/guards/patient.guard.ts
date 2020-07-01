@@ -6,6 +6,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { validRoles } from '../../utils/enums';
 
 @Injectable({ providedIn: 'root' })
 export class StudentGuard implements CanActivate {
@@ -21,5 +22,5 @@ export class StudentGuard implements CanActivate {
   }
 }
 function containsPatientRole(role) {
-  return role.name === 'Alumno';
+  return role.name === validRoles.Patient;
 }

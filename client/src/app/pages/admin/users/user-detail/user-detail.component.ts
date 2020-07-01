@@ -1,7 +1,8 @@
+import { TimeSlot } from './../../../../models/timeslot.model';
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 import { User } from '../user.model';
 import { NotificationService } from '../../../../services/notification.service';
 import { UserService } from '../user.service';
@@ -12,7 +13,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../../auth/auth.service';
-import { TimeSlot } from '../../../../models/timeslot.model';
+
+import * as moment from 'moment';
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
@@ -24,7 +26,8 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   isRequired = false;
   displayedColumns: string[] = ['day', 'timeStart', 'timeEnd'];
   selection = new SelectionModel<TimeSlotElement>(true, []);
-  dataSource = new MatTableDataSource<TimeSlotElement>(ELEMENT_DATA);
+  timeData: TimeSlotElement[] = [];
+  dataSource: MatTableDataSource<TimeSlotElement>;
   user: User;
   @Input() userId: number;
   isProfessional = false;
@@ -32,6 +35,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   imageUpload: File;
   imageTemp: string | ArrayBuffer;
   form: FormGroup;
+
   constructor(
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
@@ -47,7 +51,15 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       email: new FormControl(null, [Validators.required, Validators.email]),
       role: new FormControl('1', [Validators.required]),
       categories: new FormControl([]),
-      timeslot: new FormControl([]),
+      timeslot: new FormArray([
+        this.addTimeSlot(1),
+        this.addTimeSlot(2),
+        this.addTimeSlot(3),
+        this.addTimeSlot(4),
+        this.addTimeSlot(5),
+        this.addTimeSlot(6),
+        this.addTimeSlot(7)
+      ]),
       active: new FormControl(true),
     });
     if (router.url.indexOf('/new') !== -1) {
@@ -59,27 +71,40 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       this.form.addControl('confirmPassword', new FormControl(null));
     }
     this.form.updateValueAndValidity();
-    this.form.get('timeslot').setValue(this.dataSource.data);
-   
+    // this.form.get('timeslot').setValue(this.dataSource.data);
+
+  }
+  get timeslot() {
+    return this.form.get('timeslot') as FormArray;
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.user && changes.user.currentValue) {
       this.populateForm(changes.user.currentValue.id);
-    }
+   }
   }
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
   }
+  addTimeSlot(i) {
+    return new FormGroup({
+      day: new FormControl(i),
+      timeStart: new FormControl(null),
+      timeEnd: new FormControl(null)
+    });
+  }
   ngOnInit() {
+    this.dataSource = new MatTableDataSource<TimeSlotElement>(ELEMENT_DATA);
     this.activatedRoute.params.subscribe(params => {
-      const id = +params.id;
-      if (!isNaN(id)) {
-        this.populateForm(id);
-      } else {
-        this.populateForm(this.userId);
+      if (this.router.url.indexOf('new') === -1) {
+        const id = +params.id;
+        if (!isNaN(id)) {
+          this.populateForm(id);
+        } else {
+          this.populateForm(this.userId);
+        }
       }
     });
-   }
+  }
   onClear() {
     this.form.reset();
   }
@@ -87,9 +112,6 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       if (!this.form.get('id').value) {
-        this.form.get('timeslot').setValue(
-          this.filterTimeSlot(this.form.get('timeslot').value)
-        );
         this._userService.post(this.url, this.form.value).subscribe(
           (resp: any) => {
             this.notificationService.success(':: El usuario ha sido creado');
@@ -108,37 +130,42 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
               ':: El usuario ha sido actualizado',
             );
           },
-          (err) => {
-            this.notificationService.error(`:: ${err}`);
-          },
+          (err) => this.handleError(err)
+
         );
       }
     }
   }
+  private handleError (error: any) {
+    let errMsg = (error.message) ? error.message :
+    error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg);
+    this.notificationService.error(`:: ${errMsg}`);
 
+  }
   populateForm(id) {
+    this._userService.getSingle(this.url, id).subscribe((data: any) => {
+      const { firstname, lastname, email, role } = data.user;
+      this.user = data.user;
+      const categories = data.user.Professional ? data.user.Professional.categories : null;
+      const timeslot = data.user.Professional ? data.user.Professional.timeslot : null;
 
-      this._userService.getSingle(this.url, id).subscribe((data: any) => {
-        const { firstname, lastname, email, role, categories } = data.user;
-        this.user = data.user;
-        this.form.get('id').setValue(id);
-        this.form.get('firstname').setValue(firstname);
-        this.form.get('lastname').setValue(lastname);
-        this.form.get('email').setValue(email);
-        this.form.get('role').setValue(role.toString());
-        if (role === validRoles.Professional) {
-          this.isProfessional = true;
-          this.form.get('categories').setValue(categories.map(i => i.id));
-          // TimeSlots.map(el => {
+      this.form.get('id').setValue(id);
+      this.form.get('firstname').setValue(firstname);
+      this.form.get('lastname').setValue(lastname);
+      this.form.get('email').setValue(email);
+      this.form.get('role').setValue(role.toString());
+      if (role === validRoles.Professional) {
+        this.isProfessional = true;
+        this.form.get('categories').setValue(categories.map(i => i.id));
+        timeslot.map((value, key) => {
 
-          //   if (el.day === i) {
-          //     this.dataSource.data['timeStart'] = el.timeStart;
-          //   }
-          // });
-          this.form.get('TimeSlots').setValue(categories.map(i => i.id));
-        }
-      });
-   
+          this.timeslot.controls[value.day - 1].get('timeStart').setValue(value.timeStart);
+          this.timeslot.controls[value.day - 1].get('timeEnd').setValue(value.timeEnd);
+        });
+      }
+    });
+
     // const { firstname, lastname, email, role, categories, TimeSlots } = ;
     // this.form.get('id').setValue(this.user.id);
     // this.form.get('firstname').setValue(this.user.firstname);
@@ -153,19 +180,19 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   setDefaultTime(evt) {
     evt.stopPropagation();
   }
-  timeChanged(evt, el, ts) {
-  
-    if (ts === 's') {
-      el.timeStart = evt;
-    } else {
-      el.timeEnd = evt;
-    }
-  }
-  private filterTimeSlot(timeslot: TimeSlot[]) {
-    return timeslot.filter(i => {
-      return i.timeStart && i.timeEnd;
-    });
-  }
+  // timeChanged(evt, el, ts) {
+
+  //   if (ts === 's') {
+  //     el.timeStart = evt;
+  //   } else {
+  //     el.timeEnd = evt;
+  //   }
+  // }
+  // private filterTimeSlot(timeslot: TimeSlot[]) {
+  //   return timeslot.filter(i => {
+  //     return i.timeStart && i.timeEnd;
+  //   });
+  // }
 
   selectImage(file: File) {
     if (!file) {
@@ -176,7 +203,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       Swal.fire(
         'Sólo imágenes',
         'El archivo seleccionado no es una imagen',
-        'error'
+        'error',
       );
       this.imageUpload = null;
       return;
@@ -185,6 +212,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
 
     // hace preview de la imagen
     let reader = new FileReader();
+    let urlImageTmp = reader.readAsDataURL(file);
     reader.onloadend = () => (this.imageTemp = reader.result);
   }
 
@@ -208,7 +236,7 @@ export interface TimeSlotElement {
   timeEnd: string;
 }
 
-const ELEMENT_DATA: TimeSlotElement[] = [
+let ELEMENT_DATA: TimeSlotElement[] = [
   { day: 1, timeStart: null, timeEnd: null },
   { day: 2, timeStart: null, timeEnd: null },
   { day: 3, timeStart: null, timeEnd: null },
@@ -216,4 +244,5 @@ const ELEMENT_DATA: TimeSlotElement[] = [
   { day: 5, timeStart: null, timeEnd: null },
   { day: 6, timeStart: null, timeEnd: null },
   { day: 7, timeStart: null, timeEnd: null },
+
 ];

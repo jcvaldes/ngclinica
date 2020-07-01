@@ -19,6 +19,7 @@ export default (sequelize, DataTypes) => {
     // 1:M Profesional
     Professional.hasMany(models.TimeSlot, {
       foreignKey: 'ProfessionalId',
+      as: 'timeslot'
     })
 
     // M:M

@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment.prod';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -39,7 +40,9 @@ export class PatientListComponent implements OnInit {
     private route: ActivatedRoute,
     public notificationService: NotificationService,
     public _httpService: HttpService,
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {}
   onCreate() {

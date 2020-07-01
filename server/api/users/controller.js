@@ -35,6 +35,7 @@ class UsersController {
   static FetchOne(req, res) {
     const attrs = ['id', 'firstname', 'lastname', 'email', 'img', 'role']
     const id = +req.params.id
+
     db.User.findOne({
       attributes: attrs,
       include: [
@@ -48,9 +49,10 @@ class UsersController {
             },
             {
               model: db.TimeSlot,
+              as: 'timeslot',
             },
           ],
-        }
+        },
       ],
       where: {
         id,
@@ -87,9 +89,9 @@ class UsersController {
       phone,
       img,
       categories,
-      timeslot,
     } = req.body
     const active = req.body.active || false
+    const timeslot = filterTimeSlot(req.body.timeslot)
     const role = +req.body.role
     db.sequelize
       .transaction({ autocommit: false })
@@ -162,10 +164,12 @@ class UsersController {
       password,
       phone,
       img,
-      role,
-      active,
+      categories,
     } = req.body
     const id = +req.params.id
+    const active = req.body.active || false
+    let timeslot = filterTimeSlot(req.body.timeslot)
+    const role = +req.body.role
     let options = {
       firstname,
       lastname,
@@ -178,18 +182,59 @@ class UsersController {
     if (password) {
       options.password = password
     }
-    db.User.update(options, { where: { id } })
-      .then((user) => {
-        res.status(200).json(user)
+    db.sequelize
+      .transaction({ autocommit: false })
+      .then(async (t) => {
+        await db.User.update(options, { where: { id } }, { transaction: t })
+        if (role === validRoles.Professional) {
+          if (categories) {
+            const userModel = await db.User.findOne({
+              where: { id },
+              include: [{ model: db.Professional }],
+            })
+            const professionalId = userModel.Professional.id
+            const categoriesModel = await db.Category.findAll(
+              {
+                where: {
+                  [Op.or]: {
+                    id: categories,
+                  },
+                },
+              },
+              { transaction: t },
+            )
+            await userModel.Professional.setCategories(categoriesModel, {
+              transaction: t,
+            })
+            await db.TimeSlot.destroy(
+              {
+                where: {
+                  ProfessionalId: professionalId,
+                },
+              },
+              { transaction: t },
+            )
+            timeslot =  timeslot.map((i) => {
+              i.ProfessionalId = professionalId
+              return i
+            })
+            await db.TimeSlot.bulkCreate(
+              timeslot,
+              { transaction: t },
+            )
+          }
+        }
+        t.commit()
+        return true
       })
-      .catch(Sequelize.ValidationError, (msg) =>
-        res.status(422).json({ message: msg.errors[0].message }),
-      )
-      .catch((err) =>
+      .then((resp) => {
+        res.status(200).end()
+      })
+      .catch((err) => {
         res
           .status(400)
-          .json({ message: RESPONSES.DB_CONNECTION_ERROR.message + err }),
-      )
+          .json({ description:  err }).end()
+      })
   }
   static Delete(req, res) {
     const { id } = req.params
@@ -223,5 +268,9 @@ class UsersController {
       )
   }
 }
-
+const filterTimeSlot = (timeslot) => {
+  return timeslot.filter((i) => {
+    return i.timeStart && i.timeEnd
+  })
+}
 export default UsersController

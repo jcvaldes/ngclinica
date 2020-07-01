@@ -15,11 +15,11 @@ module.exports = {
       allowNull: false,
     },
     timeStart: {
-      type: Sequelize.STRING(5),
+      type: Sequelize.STRING(9),
       allowNull: false,
     },
     timeEnd: {
-      type: Sequelize.STRING(5),
+      type: Sequelize.STRING(9),
       allowNull: false,
     },
     active: {

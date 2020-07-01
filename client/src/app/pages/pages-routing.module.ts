@@ -5,6 +5,7 @@ import { LoginGuard } from '../services/guards/login.guard';
 import { VerifyTokenGuard } from '../services/guards/verify-token.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { ProfileComponent } from './admin/users/profile/profile.component';
+import { ProfessionalGuard } from '../services/guards/professional.guard';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
     path: 'appointments',
     canActivate: [LoginGuard],
     loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule)
+  },
+  {
+    path: 'schedules',
+    canActivate: [ProfessionalGuard],
+    loadChildren: () => import('./professional/schedules/schedule.module').then(m => m.ScheduleModule)
   },
   { path: '**', component: DashboardComponent},
 ];

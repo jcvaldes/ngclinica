@@ -5,11 +5,11 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    PatientId: {
+    ProfessionalId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ProfessionalId: {
+    PatientId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -41,8 +41,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'CategoryId',
       targetKey: 'id',
     });
-    Appointment.belongsTo(models.User, {
-      foreignKey: 'UserId',
+    Appointment.belongsTo(models.Patient, {
+      foreignKey: 'PatientId',
+      as: 'patient',
       targetKey: 'id',
     });
     Appointment.belongsTo(models.Professional, {

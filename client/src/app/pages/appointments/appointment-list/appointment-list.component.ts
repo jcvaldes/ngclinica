@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -19,7 +20,7 @@ import { HttpService } from '../../../services/http.service';
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.scss']
 })
-export class AppointmentListComponent {
+export class AppointmentListComponent implements OnInit {
   dataSource: MatTableDataSource<Appointment>;
   displayedColumns: string[] = [
     'Category',
@@ -29,19 +30,25 @@ export class AppointmentListComponent {
     'active',
     'actions',
   ];
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  
   @ViewChild('input', { static: true }) input: ElementRef;
   filter: string;
+  url: string;
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     public notificationService: NotificationService,
     public _httpService: HttpService,
-  ) {}
+  ) {
+    this.url = `${environment.apiUrl}/api/appointment`;
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this._httpService.get(this.url).subscribe(appointments => {
+      this.dataSource = appointments;
+    });
+  }
  
   onEdit(row) {
     // const dialogRef = this.dialog.open(
@@ -93,18 +100,7 @@ export class AppointmentListComponent {
 
 
   loadPage() {
-    this.router.navigated = false;
-    // tslint:disable-next-line: max-line-length
-    this.router.navigate(['/appointments'],
-      { queryParams:
-        {
-          filter: this.input.nativeElement.value,
-          pageIndex: this.paginator.pageIndex,
-          pageSize: this.paginator.pageSize
-        }
-      }).then(() => {
-        // console.log(this.route.snapshot.data.appointments);
-      });
+   
   }
 
   dialogConfig(data?) {
@@ -114,15 +110,5 @@ export class AppointmentListComponent {
     dialogConfig.data = data || null;
     return dialogConfig;
   }
-  spanishRangeLabel = (page: number, pageSize: number, length: number) => {
-    if (length === 0 || pageSize === 0) { return `0 de ${length}`; }
 
-    length = Math.max(length, 0);
-    const startIndex = page * pageSize;
-    // If the start index exceeds the list length, do not try and fix the end index to the end.
-    const endIndex = startIndex < length ?
-      Math.min(startIndex + pageSize, length) :
-      startIndex + pageSize;
-    return `${startIndex + 1} - ${endIndex} de ${length}`;
-  }
 }

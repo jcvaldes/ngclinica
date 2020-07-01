@@ -14,6 +14,7 @@
 </mat-toolbar>
 <div class="row">
   <div class="col-12 col-md-8">
+
     <form [formGroup]="form" class="normal-form mt-3">
       <div class="row my-6">
         <div class="col-12 col-sm-12 col-md-6">
@@ -70,6 +71,7 @@
           </mat-form-field>
         </div>
       </div>
+    
       <div class="row">
         <div class="col-12 col-sm-12 col-md-6">
           <mat-form-field>
@@ -93,6 +95,7 @@
             >
               <mat-option value="1">Admin</mat-option>
               <mat-option value="2">Profesional</mat-option>
+              <mat-option value="3">Paciente</mat-option>
             </mat-select>
             <mat-error>requerido</mat-error>
           </mat-form-field>
@@ -106,40 +109,74 @@
         </div>
 
         <div class="col-12">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z8"
+            formArrayName="timeslot"
+          >
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; let i = index; columns: displayedColumns"
+              (click)="selection.toggle(row)"
+              [formGroupName]="i"
+            ></tr>
 
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!-- Name Column -->
             <ng-container matColumnDef="day">
               <th mat-header-cell *matHeaderCellDef>Día</th>
-              <td mat-cell *matCellDef="let element">
-                {{
-                  element.day === 1
-                    ? 'Lunes'
-                    : element.day === 2
-                    ? 'Martes'
-                    : element.day === 3
-                    ? 'Miércoles'
-                    : element.day === 4
-                    ? 'Jueves'
-                    : element.day === 5
-                    ? 'Viernes'
-                    : element.day === 6
-                    ? 'Sábado'
-                    : 'Domingo'
-                }}
+              <td mat-cell *matCellDef="let element; let i = index">
+              
+                  {{
+                    element.day === 1
+                      ? 'Lunes'
+                      : element.day === 2
+                      ? 'Martes'
+                      : element.day === 3
+                      ? 'Miércoles'
+                      : element.day === 4
+                      ? 'Jueves'
+                      : element.day === 5
+                      ? 'Viernes'
+                      : element.day === 6
+                      ? 'Sábado'
+                      : 'Domingo'
+                  }}
+                
               </td>
             </ng-container>
 
             <!-- Weight Column -->
             <ng-container matColumnDef="timeStart">
               <th mat-header-cell *matHeaderCellDef>Horario Entrada</th>
-              <td mat-cell *matCellDef="let element">
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                [formGroupName]="i"
+              >
                 <div style="display: flex;">
-                  <ngx-timepicker-field
+                  <!-- <ngx-timepicker-field
                     placeholder="Inicio"
                     [format]="24"
+                    formControlName="timeStart"
                     (timeChanged)="timeChanged($event, element, 's')"
-                  ></ngx-timepicker-field>
+                  ></ngx-timepicker-field> -->
+                  <mat-form-field>
+                    <mat-label>Hora Entrada</mat-label>
+                    <input
+                      matInput
+                      aria-label="default time"
+                      [ngxTimepicker]="defaultValue"
+                      [formControl]="timeslot.controls[i].get('timeStart')"  
+                    />
+                    <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
+                  </mat-form-field> 
+                  <!-- <ngx-timepicker-field
+                  placeholder="Inicio"
+                  [format]="24"
+                  [formControl]="timeslot.controls[i].get('timeStart')"
+                ></ngx-timepicker-field> -->
                   <!-- <mat-checkbox
                     *ngIf="element.id === 2"
                     (click)="setDefaultTime($event)"
@@ -151,25 +188,28 @@
             <!-- Symbol Column -->
             <ng-container matColumnDef="timeEnd">
               <th mat-header-cell *matHeaderCellDef>Horario Salida</th>
-              <td mat-cell *matCellDef="let element">
-                <ngx-timepicker-field
-                  placeholder="Inicio"
-                  [format]="24"
-                  (timeChanged)="timeChanged($event, element, 'e')"
-                ></ngx-timepicker-field>
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                [formGroupName]="i"
+              >
+              <mat-form-field>
+                <mat-label>Hora Salida</mat-label>
+                <input
+                  matInput
+                  aria-label="default time"
+                  [ngxTimepicker]="defaultValue"
+       
+                  [formControl]="timeslot.controls[i].get('timeEnd')"  
+                />
+                <ngx-material-timepicker    #defaultValue></ngx-material-timepicker>
+              </mat-form-field> 
+
               </td>
             </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr
-              mat-row
-              *matRowDef="let row; let i = index; columns: displayedColumns" 
-              (click)="selection.toggle(row)"
-            ></tr>
           </table>
         </div>
       </div>
-
       <div class="row">
         <div class="col-12 col-sm-12 col-md-6">
           <mat-slide-toggle formControlName="active" ngchecked="[active]">
@@ -207,9 +247,15 @@
         <img *ngIf="!imageTemp" [src]="user?.img | image" class="w150 d-block p-b-20">
         <img *ngIf="imageTemp" [src]="imageTemp" class="w150 d-block p-b-20">
 
-        <input (change)="selectImage($event.target.files[0])" type="file">
-        <br><br>
-        <button (click)="changeImage()" [disabled]="!imageUpload" type="button" class="btn btn-success btn-block waves-effect waves-light m-r-10">
+        <input (change)="selectImage($event.target.files[0])" type="file" />
+        <br />
+        <br />
+        <button
+          (click)="changeImage()"
+          [disabled]="!imageUpload"
+          type="button"
+          class="btn btn-success btn-block waves-effect waves-light m-r-10"
+        >
           <i class="fa fa-save"></i>
           Actualizar Foto
         </button>
@@ -229,6 +275,4 @@
       Actualizar Foto
     </button> -->
   </div>
-
-  
 </div>

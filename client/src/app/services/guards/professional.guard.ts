@@ -6,6 +6,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { validRoles } from '../../utils/enums';
 
 @Injectable({ providedIn: 'root' })
 export class ProfessionalGuard implements CanActivate {
@@ -21,5 +22,5 @@ export class ProfessionalGuard implements CanActivate {
   }
 }
 function containsProfessionalRole(role) {
-  return role  === 'Professional';
+  return role  === validRoles.Professional;
 }

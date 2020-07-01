@@ -20,6 +20,7 @@ class CategoriesController {
           include: [
             {
               model: db.TimeSlot,
+              as: 'timeslot'
             },
             {
               model: db.User,

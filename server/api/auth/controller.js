@@ -77,8 +77,7 @@ function getMenu(role) {
     menu[1].submenu.push({ titulo: 'Especialidades', url: '/categories' })
   }
   if (containsProfessionalRole(role)) {
-    menu[1].submenu.push({ titulo: 'Pacientes', url: '/patients' })
-    menu[1].submenu.push({ titulo: 'Turnos', url: '/appointments' })
+    menu[1].submenu.push({ titulo: 'Turnos', url: '/schedules' })
   }
   if (containsPatientRole(role)) {
     menu[1].submenu.push({ titulo: 'Turnos', url: '/appointments' })
