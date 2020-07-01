@@ -1,0 +1,35 @@
+<mat-form-field>
+  <mat-select
+    [formControl]="comboCtrl"
+    placeholder="Selecciona Categoría"
+    required
+    #singleSelect
+    [multiple]="isMultiple"
+    (selectionChange)="onSelectionChange($event)"
+  >
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="comboFilterCtrl"
+        placeholderLabel="Buscar categoría"
+        [noEntriesFoundLabel]="'No hay resultados'"
+      ></ngx-mat-select-search>
+    </mat-option>
+    <mat-select-trigger *ngIf="isMultiple">
+      {{ comboCtrl.value ? selected : '' }}
+
+      <span
+        *ngIf="comboCtrl.value?.length > 1"
+        class="example-additional-selection"
+      >
+        (+{{ comboCtrl.value.length - 1 }}
+        {{ comboCtrl.value?.length === 2 ? 'otro' : 'otros' }})
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let c of filteredData | async" [value]="c.id">
+      {{ c.name }}
+    </mat-option>
+  </mat-select>
+  <mat-error>requerido</mat-error>
+
+</mat-form-field>
+
