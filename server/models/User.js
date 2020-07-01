@@ -73,9 +73,9 @@ export default (sequelize, DataTypes) => {
     }
   })
 
-  User.beforeBulkUpdate((user, options) => {
-    if (user.attributes.password) {
-      user.password = bcrypt.hashSync(user.attributes.password, 10)
+  User.beforeUpdate((user, options) => {
+    if (user.password) {
+      user.password = bcrypt.hashSync(user.password, 10)
     }
   })
   return User

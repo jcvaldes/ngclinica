@@ -185,7 +185,7 @@ class UsersController {
     db.sequelize
       .transaction({ autocommit: false })
       .then(async (t) => {
-        await db.User.update(options, { where: { id } }, { transaction: t })
+        await db.User.update(options, { where: { id }, individualHooks: true }, { transaction: t })
         if (role === validRoles.Professional) {
           if (categories) {
             const userModel = await db.User.findOne({
