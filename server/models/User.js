@@ -57,11 +57,11 @@ export default (sequelize, DataTypes) => {
   User.associate = (models) => {
     // 1:1
     User.hasOne(models.Professional, {
-      foreignKey: 'UserId'
-    });
+      foreignKey: 'UserId',
+    })
     User.hasOne(models.Patient, {
-      foreignKey: 'UserId'
-    });
+      foreignKey: 'UserId',
+    })
   }
   // Method 3 via the direct method
   User.beforeCreate((user, options) => {
@@ -74,8 +74,10 @@ export default (sequelize, DataTypes) => {
   })
 
   User.beforeUpdate((user, options) => {
-    if (user.password) {
-      user.password = bcrypt.hashSync(user.password, 10)
+    if (user.changed('password')) {
+      if (user.password) {
+        user.password = bcrypt.hashSync(user.password, 10)
+      }
     }
   })
   return User

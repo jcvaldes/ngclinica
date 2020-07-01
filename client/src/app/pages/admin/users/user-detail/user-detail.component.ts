@@ -39,8 +39,8 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
-    private _authService: AuthService,
-    private _userService: UserService,
+    public _authService: AuthService,
+    public _userService: UserService,
     private router: Router
   ) {
     this.url = `${environment.apiUrl}/api/user`;
@@ -118,14 +118,16 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
             this.form.get('id').setValue(resp.user.id);
           },
           (err) => {
-            this.notificationService.error(`:: ${err}`);
+            this.handleError(err);
           },
         );
       } else {
         const id = !this.userId ? this.form.get('id').value : this._authService.user.id;
         this._userService.put<User>(`${this.url}/${id}`, this.form.value).subscribe(
           () => {
-            this.router.navigate(['/users']);
+            if (this._authService.user.role === validRoles.Admin) {
+              this.router.navigate(['/users']);
+            }
             this.notificationService.success(
               ':: El usuario ha sido actualizado',
             );

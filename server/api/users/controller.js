@@ -91,7 +91,7 @@ class UsersController {
       categories,
     } = req.body
     const active = req.body.active || false
-    const timeslot = filterTimeSlot(req.body.timeslot)
+
     const role = +req.body.role
     db.sequelize
       .transaction({ autocommit: false })
@@ -114,6 +114,7 @@ class UsersController {
           userModel.setPatient(userModel, { transaction: t })
         }
         if (role === validRoles.Professional) {
+          const timeslot = filterTimeSlot(req.body.timeslot)
           const professionalModel = await db.Professional.create(
             { UserId: userModel.id },
             { transaction: t },
@@ -168,7 +169,6 @@ class UsersController {
     } = req.body
     const id = +req.params.id
     const active = req.body.active || false
-    let timeslot = filterTimeSlot(req.body.timeslot)
     const role = +req.body.role
     let options = {
       firstname,
@@ -187,6 +187,7 @@ class UsersController {
       .then(async (t) => {
         await db.User.update(options, { where: { id }, individualHooks: true }, { transaction: t })
         if (role === validRoles.Professional) {
+          let timeslot = filterTimeSlot(req.body.timeslot)
           if (categories) {
             const userModel = await db.User.findOne({
               where: { id },
