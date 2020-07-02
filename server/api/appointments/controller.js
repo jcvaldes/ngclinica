@@ -5,7 +5,7 @@ import RESPONSES from '../../utils/responses'
 import _ from 'lodash'
 
 class AppointmentsController {
-  static Fetch(req, res) {
+  static async Fetch(req, res) {
     const id = req.user.id
     const attrs = [
       'id',
@@ -15,8 +15,11 @@ class AppointmentsController {
       'createdAt',
       'active',
     ]
-    const search = ['appointmentDate', 'active']
-    const options = Parametrizer.getOptions(req.query, attrs, search)
+    const patientModel = await db.Patient.findOne({
+      where: {
+        UserId: req.user.id
+      }
+    });
     db.Appointment.findAndCountAll({
       attributes: attrs,
       include: [
@@ -24,17 +27,23 @@ class AppointmentsController {
           model: db.Category,
         },
         {
-          model: db.User,
+          model: db.Professional,
           as: 'professional',
-          attributes: ['id', 'firstname', 'lastname'],
+          attributes: ['id'],
+          include: [
+            {
+              model: db.User,
+              attributes: ['id', 'firstname', 'lastname']
+            }
+          ]
         },
       ],
       where: {
-        UserId: id,
+        PatientId: patientModel.id,
       },
     })
       .then((appointments) => {
-        res.status(200).json(Parametrizer.responseOk(appointments, options))
+        res.status(200).json(appointments.rows)
       })
       .catch(Sequelize.ValidationError, (msg) =>
         res.status(422).json({

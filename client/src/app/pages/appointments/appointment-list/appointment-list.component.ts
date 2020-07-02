@@ -46,6 +46,7 @@ export class AppointmentListComponent implements OnInit {
 
   ngOnInit() {
     this._httpService.get(this.url).subscribe(appointments => {
+      debugger
       this.dataSource = appointments;
     });
   }

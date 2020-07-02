@@ -40,11 +40,11 @@
           </ng-container>
           <ng-container matColumnDef="professional">
             <mat-header-cell *matHeaderCellDef>Profesional</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.professional.firstname }} {{element.professional.lastname }} </mat-cell>
+            <mat-cell *matCellDef="let element">{{element.professional.User.firstname }} {{element.professional.User.lastname }} </mat-cell>
           </ng-container>
           <ng-container matColumnDef="appointmentDate">
             <mat-header-cell *matHeaderCellDef>Fecha Turno</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'fullDate'}}</mat-cell>
+            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'dd/MM/yyyy'}}</mat-cell>
           </ng-container>
           <ng-container matColumnDef="timeDate">
             <mat-header-cell *matHeaderCellDef>Hora Turno</mat-header-cell>
