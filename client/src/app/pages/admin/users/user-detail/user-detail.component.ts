@@ -146,7 +146,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   }
   populateForm(id) {
-    this._userService.getSingle(this.url, id).subscribe((data: any) => {
+    this._userService.getSingle(`${this.url}/${id}`).subscribe((data: any) => {
       const { firstname, lastname, email, role } = data.user;
       this.user = data.user;
       const categories = data.user.Professional ? data.user.Professional.categories : null;

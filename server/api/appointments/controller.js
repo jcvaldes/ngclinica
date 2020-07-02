@@ -45,10 +45,21 @@ class AppointmentsController {
         res.status(400).json({ message: RESPONSES.DB_CONNECTION_ERROR.message })
       })
   }
-  static Create(req, res) {
+  static async Create(req, res) {
     const body = req.body
-    body.UserId = req.user.id
-    db.Appointment.create(req.body)
+    const patientModel = await db.Patient.findOne({
+      where: {
+        UserId: req.user.id
+      }
+    });
+    const professionalModel = await db.Professional.findOne({
+      where: {
+        UserId: body.ProfessionalId
+      }
+    });
+    body.PatientId = patientModel.id;
+    body.ProfessionalId = professionalModel.id;
+    db.Appointment.create(body)
       .then((appointment) => {
         res.status(200).json({
           ok: true,

@@ -22,7 +22,7 @@ export class User implements IUser{
     public role: number,
     public confirmpassword?: string,
     public categories?: Category[],
-    public TimeSlot?: TimeSlot[],
+    public timeslot?: TimeSlot[],
     public img?: string,
     public id?: number
   ) {}

@@ -12,13 +12,20 @@ class UsersController {
       'firstname',
       'lastname',
       'email',
-      'role',
       'img',
       'active',
       'createdAt',
     ]
+    const role = +req.query.role;
+    let where = {}
+    if (role === validRoles.Professional) {
+      where = {
+        role
+      }
+    }
     db.User.findAndCountAll({
       attributes: attrs,
+      where
     })
       .then((data) => {
         res.status(200).json(data.rows)
@@ -35,6 +42,7 @@ class UsersController {
   static FetchOne(req, res) {
     const attrs = ['id', 'firstname', 'lastname', 'email', 'img', 'role']
     const id = +req.params.id
+    const categoryId = +req.query.categoryId
 
     db.User.findOne({
       attributes: attrs,
@@ -46,6 +54,10 @@ class UsersController {
               model: db.Category,
               as: 'categories',
               through: ['id'],
+              where: {
+                  id: categoryId,
+
+              }
             },
             {
               model: db.TimeSlot,
@@ -111,7 +123,10 @@ class UsersController {
         )
         userModel.password = ':P'
         if (role === validRoles.Patient) {
-          userModel.setPatient(userModel, { transaction: t })
+          const patientModel = await db.Patient.create(
+            { UserId: userModel.id },
+            { transaction: t },
+          )
         }
         if (role === validRoles.Professional) {
           const timeslot = filterTimeSlot(req.body.timeslot)

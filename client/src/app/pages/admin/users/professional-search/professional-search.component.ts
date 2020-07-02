@@ -1,13 +1,10 @@
-import { environment } from './../../../../environments/environment.prod';
-import { validRoles } from './../../../utils/enums';
+import { environment } from './../../../../../environments/environment';
+import { validRoles } from './../../../../utils/enums';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
-
-import { User } from '../../admin/users/user.model';
-import { HttpService } from '../../../services/http.service';
-import { ComboSearchComponent } from '../../../shared/combo-search/combo-search.component';
-
-
+import * as _ from 'lodash'
+import { User } from '../../../admin/users/user.model';
+import { HttpService } from '../../../../services/http.service';
+import { ComboSearchComponent } from '../../../../shared/combo-search/combo-search.component';
 
 @Component({
   selector: 'app-professional-search',

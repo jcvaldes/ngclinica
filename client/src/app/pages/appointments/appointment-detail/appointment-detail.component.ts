@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -9,6 +10,7 @@ import { NgxCalendarComponent } from 'ss-ngx-calendar';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
 import { HttpService } from '../../../services/http.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-detail',
@@ -17,14 +19,14 @@ import { HttpService } from '../../../services/http.service';
 })
 export class AppointmentDetailComponent implements OnInit, OnDestroy {
   @ViewChild('calendar') calendar: NgxCalendarComponent;
-  atendeeDays: number[] = [];
+  timeslot: any[] = [];
   professionals: User[] = [];
-  professional: User;
+  professional: any;
   timeTable: string[];
   category: Category;
   appointment: Appointment;
   appointmentSubscription: Subscription = new Subscription();
-  appointmentTime: string = null;
+  appointmentTime: Date;
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
     CategoryId: new FormControl(null, Validators.required),
@@ -35,16 +37,21 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   calendarValue = null;
   calendarOptions = { isWeek: true, isWithTime: true, fromHour: 7, toHour: 19, fromDate: moment(), minuteInterval: 30, toDate: moment().add(1, 'M') };
   calendarRange = null;
+  url: string;
   calendarEvents = [moment(), '2020-06-19'];
   constructor(
     private _notificationService: NotificationService,
+    private router: Router,
     public _httpService: HttpService,
   ) {
-    this.form.get('ProfessionalId').valueChanges.subscribe(value => {
-      this.professional = this.professionals.filter(el => {
-        return el.id === value;
-      })[0];
-      this.atendeeDays = this.professional.TimeSlot.map(item => item.day);
+    this.url = `${environment.apiUrl}/api/appointment`;
+    this.form.get('CategoryId').valueChanges.subscribe(id => {
+      this._httpService.getSingle(`${environment.apiUrl}/api/user/${id}?categoryId=${id}`).subscribe((data: any) => {
+        this.professional = data.user;
+      });
+    });
+    this.form.get('ProfessionalId').valueChanges.subscribe(id => {
+      this.timeslot = this.professional.Professional.timeslot;
     });
   }
   ngOnDestroy() {
@@ -63,60 +70,59 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
     this.timeTable = null;
     this.appointmentTime = null;
   }
-  onClose(refresh?) {
-  }
   onSubmit() {
-    // if (this.form.valid) {
-      // if (!this.form.get('id').value) {
-      //   Swal.fire({
-      //     title: '¿Deseas Confirmar el Turno?',
-      //     html: `
-      //         Estás a punto de agendar un turno con el profesional <strong>${this.professional.firstname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
-      //     `,
-      //     icon: 'warning',
-      //     showCancelButton: true,
-      //     confirmButtonText: 'Sí, Agendar!',
-      //     cancelButtonText: 'No',
-      //   }).then((result) => {
-      //     if (result.value) {
-          //   this._httpService.add<HttpService>(this.form.value).subscribe(
-          //     (resp: any) => {
-          //       Swal.fire(
-          //         'Atención',
-          //         'El turno ha sido creado',
-          //         'success'
-          //       );
-          //       this.onClear();
-          //     },
-          //     (err) => {
-          //       Swal.fire(
-          //         'Error',
-          //         `:: ${err}`,
-          //         'error'
-          //       );
-          //     },
-          //   );
-          // }
-        // });
-      // } else {
-        // this._httpService.update<HttpService>(this.form.value).subscribe(
-        //   (appointment) => {
-        //     Swal.fire(
-        //       'Atención',
-        //       ':: El turno ha sido actualizado',
-        //       'success'
-        //     );
-        //   },
-        //   (err) => {
-        //     Swal.fire(
-        //       'Error',
-        //       `:: ${err}`,
-        //       'error'
-        //     );
-        //   },
-        // );
-    //   }
-    // }
+    if (this.form.valid) {
+    if (!this.form.get('id').value) {
+      Swal.fire({
+        title: '¿Deseas Confirmar el Turno?',
+        html: `
+            Estás a punto de agendar un turno con el profesional <strong>${this.professional.firstname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, Agendar!',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.value) {
+      this._httpService.post(this.url, this.form.value).subscribe(
+        (resp: any) => {
+          Swal.fire(
+            'Atención',
+            'El turno ha sido creado',
+            'success'
+          );
+          this.onClear();
+          this.router.navigate(['/appointments']);
+        },
+        (err) => {
+          Swal.fire(
+            'Error',
+            `:: ${err}`,
+            'error'
+          );
+        },
+      );
+    }
+    });
+    } else {
+    this._httpService.put(`${this.url}/${this.form.get('id')}`, this.form.value).subscribe(
+      (appointment) => {
+        Swal.fire(
+          'Atención',
+          ':: El turno ha sido actualizado',
+          'success'
+        );
+      },
+      (err) => {
+        Swal.fire(
+          'Error',
+          `:: ${err}`,
+          'error'
+        );
+      },
+    );
+      }
+    }
   }
   populateForm(data) {
     // this.appointmentSubscription = this._httpService
@@ -151,7 +157,8 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
       this._notificationService.error('Ingresa una especialidad y un profesional antes de continuar');
       return false;
     }
-    if (!this.atendeeDays.includes(this.calendarValue.isoWeekday())) {
+    const atendeeDays = this.timeslot.map(i => i.day);
+    if (!atendeeDays.includes(this.calendarValue.isoWeekday())) {
       this._notificationService.error('El profesional elegido no atiende el dia seleccionado, revisa los días en los que atiende e intenta nuevamente');
       return false;
     }
@@ -159,7 +166,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
   private createTimeTable() {
     const x = 30; // minutes interval
-    const schedule: any = this.professional.TimeSlot.find(i => i.day === this.calendarValue.isoWeekday());
+    const schedule: any = this.timeslot.find(i => i.day === this.calendarValue.isoWeekday());
     const hourStart = +schedule.timeStart.split(':')[0];
     const hourEnd = +schedule.timeEnd.split(':')[0];
     let times = []; // time array
@@ -170,7 +177,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
       let hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
       let mm = (tt % 60); // getting minutes of the hour in 0-55 format
       times[i] = (hh % 24) +
-        ':' + ('0' + mm).slice(-2) // + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
+        ':' + ('0' + mm).slice(-2) + ' ' + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
       tt = tt + x;
     }
 
@@ -181,16 +188,12 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
   }
   timeChange(evt) {
     const time = evt.value.split(':');
-    this.appointmentTime = evt;
-    debugger
-    this.form.get('appointmentDate').setValue(
-      new Date(
+    this.appointmentTime =  new Date(
         this.calendarValue.year(),
         this.calendarValue.month(),
         this.calendarValue.date(),
         time[0],
         time[1]
-      )
-    );
+      );
   }
 }

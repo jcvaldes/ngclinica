@@ -6,7 +6,7 @@
   <button
     class="btn-dialog-close"
     mat-stroked-button
-    (click)="onClose()"
+    routerLink="/appointments"
     tabIndex="-1"
   >
     <mat-icon>clear</mat-icon>
@@ -23,27 +23,21 @@
       ></app-category-search>
     </div>
     <div class="col-12 col-md-6">
-      <mat-form-field>
-        <mat-select
-          formControlName="ProfessionalId"
-          placeholder="Selecciona Profesional"
-          required
-        >
-          <mat-option *ngFor="let p of professionals" [value]="p.id">
-            {{ p.firstname }} {{ p.lastname }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <app-professional-search
+      [comboCtrl]="form.controls['ProfessionalId']"
+      >
+      </app-professional-search>
+
     </div>
   </div>
-  <div class="row" *ngIf="professional">
+  <div class="row" *ngIf="timeslot.length>0">
     <div class="col-12 col-md-6">
       <div class="alert alert-primary text-center" role="alert">
         <strong>El Profesional elegido atiende los días</strong>
         <mat-chip-list aria-label="Dias">
           <mat-chip
             color="primary"
-            *ngFor="let schedule of professional.TimeSlot"
+            *ngFor="let schedule of timeslot"
           >
             {{
               schedule.day === 1

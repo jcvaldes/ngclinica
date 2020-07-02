@@ -11,6 +11,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { ProfileComponent } from './profile/profile.component';
+import { ProfessionalSearchComponent } from './professional-search/professional-search.component';
 
 
 
@@ -30,10 +31,12 @@ import { ProfileComponent } from './profile/profile.component';
     UserDetailComponent,
     ProfileComponent,
     UserListComponent,
-    UserSearchComponent
+    UserSearchComponent,
+    ProfessionalSearchComponent
   ],
   exports: [
     UserSearchComponent,
+    ProfessionalSearchComponent,
     UserDetailComponent
   ],
   providers: [],

@@ -75,9 +75,9 @@ export class HttpService {
 
     return this._http.delete<T>(url);
   }
-  getSingle<T>(url, id) {
+  getSingle<T>(url) {
     return this._http.get<T>(
-      `${url}/${id}`
+      `${url}`
     );
   }
 }
