@@ -14,7 +14,7 @@ class SchedulesController {
       'ProfessionalId',
       'appointmentDate',
       'createdAt',
-      'active',
+      'status',
     ]
     const professionalModel = await db.Professional.findOne({
       where: {
