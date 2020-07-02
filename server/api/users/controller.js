@@ -13,6 +13,7 @@ class UsersController {
       'lastname',
       'email',
       'img',
+      'role',
       'active',
       'createdAt',
     ]
