@@ -17,16 +17,19 @@ class UsersController {
       'active',
       'createdAt',
     ]
-    const role = +req.query.role;
+    const role = +req.query.role
     let where = {}
     if (role === validRoles.Professional) {
       where = {
-        role
+        role,
       }
     }
     db.User.findAndCountAll({
       attributes: attrs,
-      where
+      where,
+      order: [
+        ['id', 'ASC'],
+      ]
     })
       .then((data) => {
         res.status(200).json(data.rows)
@@ -43,8 +46,13 @@ class UsersController {
   static FetchOne(req, res) {
     const attrs = ['id', 'firstname', 'lastname', 'email', 'img', 'role']
     const id = +req.params.id
-    const categoryId = +req.query.categoryId
-
+    const categoryId = +req.query.categoryId || null
+    let where = {}
+    if (categoryId) {
+      where = {
+        id: categoryId,
+      }
+    }
     db.User.findOne({
       attributes: attrs,
       include: [
@@ -55,10 +63,7 @@ class UsersController {
               model: db.Category,
               as: 'categories',
               through: ['id'],
-              where: {
-                  id: categoryId,
-
-              }
+              where
             },
             {
               model: db.TimeSlot,
@@ -201,7 +206,11 @@ class UsersController {
     db.sequelize
       .transaction({ autocommit: false })
       .then(async (t) => {
-        await db.User.update(options, { where: { id }, individualHooks: true }, { transaction: t })
+        await db.User.update(
+          options,
+          { where: { id }, individualHooks: true },
+          { transaction: t },
+        )
         if (role === validRoles.Professional) {
           let timeslot = filterTimeSlot(req.body.timeslot)
           if (categories) {
@@ -231,14 +240,11 @@ class UsersController {
               },
               { transaction: t },
             )
-            timeslot =  timeslot.map((i) => {
+            timeslot = timeslot.map((i) => {
               i.ProfessionalId = professionalId
               return i
             })
-            await db.TimeSlot.bulkCreate(
-              timeslot,
-              { transaction: t },
-            )
+            await db.TimeSlot.bulkCreate(timeslot, { transaction: t })
           }
         }
         t.commit()
@@ -248,9 +254,7 @@ class UsersController {
         res.status(200).end()
       })
       .catch((err) => {
-        res
-          .status(400)
-          .json({ description:  err }).end()
+        res.status(400).json({ description: err }).end()
       })
   }
   static Delete(req, res) {

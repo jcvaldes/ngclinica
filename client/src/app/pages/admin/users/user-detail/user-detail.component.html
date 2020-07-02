@@ -14,7 +14,6 @@
 </mat-toolbar>
 <div class="row">
   <div class="col-12 col-md-8">
-
     <form [formGroup]="form" class="normal-form mt-3">
       <div class="row my-6">
         <div class="col-12 col-sm-12 col-md-6">
@@ -199,10 +198,10 @@
                   matInput
                   aria-label="default time"
                   [ngxTimepicker]="defaultValue"
-       
+                  [format]=24
                   [formControl]="timeslot.controls[i].get('timeEnd')"  
                 />
-                <ngx-material-timepicker    #defaultValue></ngx-material-timepicker>
+                <ngx-material-timepicker  #defaultValue></ngx-material-timepicker>
               </mat-form-field> 
 
               </td>
@@ -231,7 +230,7 @@
               <mat-icon>save</mat-icon>
               Guardar
             </button>
-            <button mat-button color="warn" click="/users" *ngIf="_authService.user.role === 1">
+            <button mat-button color="warn" routerLink="/users" *ngIf="_authService.user.role === 1">
               Cancelar
             </button>
           </div>

@@ -43,7 +43,6 @@ export default (sequelize, DataTypes) => {
     });
     Appointment.belongsTo(models.Patient, {
       foreignKey: 'PatientId',
-      as: 'patient',
       targetKey: 'id',
     });
     Appointment.belongsTo(models.Professional, {
