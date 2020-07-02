@@ -31,7 +31,7 @@ export class ScheduleListComponent implements OnInit {
     'Category',
     'appointmentDate',
     'timeDate',
-    'active',
+    'status',
     'actions',
   ];
   @ViewChild('input', { static: true }) input: ElementRef;

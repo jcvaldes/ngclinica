@@ -41,14 +41,8 @@
             <mat-header-cell *matHeaderCellDef>Hora Turno</mat-header-cell>
             <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'h:mm a'}}</mat-cell>
           </ng-container>
+          
           <ng-container matColumnDef="status">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <i class="far fa-2x fa-thumbs-up fg-success" *ngIf="element.status === 1"></i>
-              <i class="far fa-2x fa-thumbs-down fg-danger" *ngIf="element.status === 4"></i>
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="active">
               <mat-header-cell *matHeaderCellDef>
                 Atendido?
               </mat-header-cell>
@@ -56,11 +50,23 @@
                 <span
                   class="label label-rounded"
                   [ngClass]="{
-                    'label-warning': element.active,
-                    'label-danger': !element.active
+                    'label-warning': element.status === 1,
+                    'label-success': element.status === 2,
+                    'label-info': element.status === 3,
+                    'label-danger': element.status === 4
                   }"
                 >
-                  {{ element.active ? 'Pendiente' : 'Atendido' }}
+                  {{
+                    element.status === 1
+                      ? 'Pendiente'
+                      : element.status === 2
+                      ? 'Aceptado'
+                      : element.status === 3
+                      ? 'Atendido'
+                      : element.status === 4
+                      ? 'Cancelado'
+                      : ''
+                  }}
                 </span>
               </mat-cell>
             </ng-container>
