@@ -167,6 +167,7 @@
                       matInput
                       aria-label="default time"
                       [ngxTimepicker]="defaultValue"
+                      [format]="24"
                       [formControl]="timeslot.controls[i].get('timeStart')"  
                     />
                     <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
@@ -198,7 +199,7 @@
                   matInput
                   aria-label="default time"
                   [ngxTimepicker]="defaultValue"
-                  [format]=24
+                  [format]="24"
                   [formControl]="timeslot.controls[i].get('timeEnd')"  
                 />
                 <ngx-material-timepicker  #defaultValue></ngx-material-timepicker>

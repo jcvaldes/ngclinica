@@ -27,10 +27,10 @@ export class AppointmentListComponent implements OnInit {
     'professional',
     'appointmentDate',
     'timeDate',
-    'active',
+    'status',
     'actions',
   ];
-  
+
   @ViewChild('input', { static: true }) input: ElementRef;
   filter: string;
   url: string;
@@ -46,11 +46,10 @@ export class AppointmentListComponent implements OnInit {
 
   ngOnInit() {
     this._httpService.get(this.url).subscribe(appointments => {
-      debugger
       this.dataSource = appointments;
     });
   }
- 
+
   onEdit(row) {
     // const dialogRef = this.dialog.open(
     //   TurnDetailComponent,
@@ -63,32 +62,34 @@ export class AppointmentListComponent implements OnInit {
   onDelete(id) {
     Swal.fire({
       title: '¿Está seguro?',
-      text: 'Estás a punto de desactivar un Paciente',
+      text: 'Estás a punto de cancelar un turno',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, Desactivar!',
+      confirmButtonText: 'Sí, Cancelar!',
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        // this._appointmentService.delete<Appointment>(id).subscribe(
-        //   () => {
-        //     this.notificationService.success(
-        //       'El paciente seleccionado ha sido Eliminado',
-        //     );
-        //     this.loadPage();
-        //   },
-        //   (err) => {
-        //     console.log(err);
-        //     Swal.fire({
-        //       title: 'Reglas de Validación',
-        //       text: err,
-        //       icon: 'error',
-        //       showConfirmButton: false,
-        //       timer: 2000,
-        //       animation: false,
-        //     });
-        //   },
-        // );
+        this._httpService.delete<Appointment>(`${this.url}/${id}`).subscribe(
+          () => {
+            Swal.fire(
+              'Atención',
+              'El turno ha sido cancelado',
+              'success'
+            );
+            this.ngOnInit();
+          },
+          (err) => {
+            console.log(err);
+            Swal.fire({
+              title: 'Error',
+              text: err,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2000,
+              animation: false,
+            });
+          },
+        );
       }
     });
   }
@@ -101,7 +102,7 @@ export class AppointmentListComponent implements OnInit {
 
 
   loadPage() {
-   
+
   }
 
   dialogConfig(data?) {

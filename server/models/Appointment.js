@@ -21,10 +21,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
+    status: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: true
+      defaultValue: 1
     },
     createdAt: {
       type: DataTypes.DATE,

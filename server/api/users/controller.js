@@ -45,7 +45,10 @@ class UsersController {
   }
   static FetchOne(req, res) {
     const attrs = ['id', 'firstname', 'lastname', 'email', 'img', 'role']
-    const id = +req.params.id
+    const id = +req.params.id || 0
+    if (id === 0) {
+      return
+    }
     const categoryId = +req.query.categoryId || null
     let where = {}
     if (categoryId) {

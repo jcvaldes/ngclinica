@@ -88,7 +88,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
         (resp: any) => {
           Swal.fire(
             'Atención',
-            'El turno ha sido creado',
+            'El turno ha sido creado, Espere confirmación del especialista',
             'success'
           );
           this.onClear();
@@ -177,13 +177,20 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
       let hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
       let mm = (tt % 60); // getting minutes of the hour in 0-55 format
       times[i] = (hh % 24) +
-        ':' + ('0' + mm).slice(-2) + ' ' + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
+        ':' + ('0' + mm).slice(-2) // + ' ' + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
       tt = tt + x;
     }
-
+    const timeStart = schedule.timeStart.split(':');
+    const timeEnd = schedule.timeEnd.split(':');
     this.timeTable = times.slice(
-      times.findIndex(i => i === schedule.timeStart),
-      times.findIndex(i => i === schedule.timeEnd)
+      times.findIndex(i => {
+        const start = i.split(':');
+        return +start[0] === +timeStart[0] && +start[1] === +timeStart[1];
+      }),
+      times.findIndex(i => {
+        const end = i.split(':');
+        return +end[0] === +timeEnd[0] && +end[1] === +timeEnd[1];
+      }),
     );
   }
   timeChange(evt) {

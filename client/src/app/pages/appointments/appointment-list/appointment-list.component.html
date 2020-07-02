@@ -29,41 +29,59 @@
           <!-- <mat-checkbox [(ngModel)]="checked" (click)="showValue()">Mostrar deshabilitados</mat-checkbox> -->
         </div>
 
-
         <div class="mat-elevation-z8">
-          <mat-table
-            [dataSource]="dataSource"
-          >
-          <ng-container matColumnDef="Category">
-            <mat-header-cell *matHeaderCellDef>Especialidad</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.Category.name }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="professional">
-            <mat-header-cell *matHeaderCellDef>Profesional</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.professional.User.firstname }} {{element.professional.User.lastname }} </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="appointmentDate">
-            <mat-header-cell *matHeaderCellDef>Fecha Turno</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'dd/MM/yyyy'}}</mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="timeDate">
-            <mat-header-cell *matHeaderCellDef>Hora Turno</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.appointmentDate | date: 'h:mm a'}}</mat-cell>
-          </ng-container>
+          <mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="Category">
+              <mat-header-cell *matHeaderCellDef>Especialidad</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.Category.name }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="professional">
+              <mat-header-cell *matHeaderCellDef>Profesional</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.professional.User.firstname }}
+                {{ element.professional.User.lastname }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="appointmentDate">
+              <mat-header-cell *matHeaderCellDef>Fecha Turno</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.appointmentDate | date: 'dd/MM/yyyy' }}
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="timeDate">
+              <mat-header-cell *matHeaderCellDef>Hora Turno</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.appointmentDate | date: 'h:mm a' }}
+              </mat-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="active">
+            <ng-container matColumnDef="status">
               <mat-header-cell *matHeaderCellDef>
-                Atendido?
+                Estado
               </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span
                   class="label label-rounded"
                   [ngClass]="{
-                    'label-warning': element.active,
-                    'label-danger': !element.active
+                    'label-warning': element.status === 1,
+                    'label-success': element.status === 2,
+                    'label-info': element.status === 3,
+                    'label-danger': element.status === 4
                   }"
                 >
-                  {{ element.active ? 'Pendiente' : 'Atendido' }}
+                  {{
+                    element.status === 1
+                      ? 'Pendiente'
+                      : element.status === 2
+                      ? 'Aceptado'
+                      : element.status === 3
+                      ? 'Atendido'
+                      : element.status === 4
+                      ? 'Cancelado'
+                      : ''
+                  }}
                 </span>
               </mat-cell>
             </ng-container>
@@ -71,19 +89,13 @@
               <mat-header-cell *matHeaderCellDef></mat-header-cell>
               <mat-cell *matCellDef="let row">
                 <button
-                  mat-icon-button
-                  (click)="onEdit(row)"
-                  matTooltip="Editar"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  color="warn"
+                  mat-button
+                  color="accent"
                   (click)="onDelete(row.id)"
-                  matTooltip="Eliminar"
+                  matTooltip="Cancelar"
                 >
                   <mat-icon>delete_outline</mat-icon>
+                  Cancelar
                 </button>
               </mat-cell>
             </ng-container>
@@ -102,7 +114,6 @@
             ></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
-
         </div>
       </div>
     </div>

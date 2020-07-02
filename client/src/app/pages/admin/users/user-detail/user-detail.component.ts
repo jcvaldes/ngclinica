@@ -114,7 +114,11 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       if (!this.form.get('id').value) {
         this._userService.post(this.url, this.form.value).subscribe(
           (resp: any) => {
-            this.notificationService.success(':: El usuario ha sido creado');
+            Swal.fire(
+              'Atención :)',
+              'El usuario ha sido creado',
+              'success',
+            );
             this.form.get('id').setValue(resp.user.id);
           },
           (err) => {
@@ -128,8 +132,10 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
             if (this._authService.user.role === validRoles.Admin) {
               this.router.navigate(['/users']);
             }
-            this.notificationService.success(
-              ':: El usuario ha sido actualizado',
+            Swal.fire(
+              'Atención',
+              'El usuario ha sido actualizado',
+              'success',
             );
           },
           (err) => this.handleError(err)
@@ -142,7 +148,12 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
     let errMsg = (error.message) ? error.message :
     error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg);
-    this.notificationService.error(`:: ${errMsg}`);
+
+    Swal.fire(
+      'Error :(',
+      `${errMsg}`,
+      'error',
+    );
 
   }
   populateForm(id) {
